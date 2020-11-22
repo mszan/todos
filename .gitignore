@@ -1,0 +1,8 @@
+.DS_Store
+/.idea
+/backend/.idea
+/backend/node_modules
+/backend/package-lock.json
+
+#Sensitive cfg files.
+/backend/cfg
