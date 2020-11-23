@@ -1,3 +1,4 @@
-const apiRouter = require('./users');
+const users = require('./users')
+const authorization = require('./authorization')
 
-module.exports = apiRouter;
+module.exports = {users, authorization}

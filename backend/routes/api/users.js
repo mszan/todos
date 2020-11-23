@@ -1,12 +1,13 @@
 const express = require('express')
 const app = express()
 const pool = require("../db")
-const bcrypt = require('bcrypt')
+const bcrypt = require("bcrypt")
+const authToken = require("../../cors/authToken")
 
 // Gets all users.
-app.get("/users", async (req, res) => {
+app.get("/", authToken.authenticate, async (req, res) => {
   try {
-    const getUsers = await pool.query("SELECT * FROM users")
+    const getUsers = await pool.query("SELECT id, username, firstname, lastname, email, active, registerDate FROM users")
     res.json(getUsers[0])
   } catch(err) {
     console.error(err.message)
@@ -14,7 +15,7 @@ app.get("/users", async (req, res) => {
 })
 
 // Adds new user.
-app.post("/users", async (req, res) => {
+app.post("/", async (req, res) => {
   try {
     const {username, password, firstname, lastname, email} = req.body
     const salt = await bcrypt.genSalt()
@@ -25,20 +26,5 @@ app.post("/users", async (req, res) => {
     console.error(err.message)
   }
 })
-
-// app.post("/users/login", async (req, res) => {
-//   try {
-//     const {username, password} = req.body
-//     const user = await pool.query("SELECT password FROM users WHERE username = ?", [username])
-//     console.log(user[0][0]['password'])
-//     if (await bcrypt.compare(password, user[0][0]['password'])) {
-//       res.json({"msg": 'Logged in.'})
-//     } else {
-//       res.json({"msg": 'Not logged in.'})
-//     }
-//   } catch (err) {
-//     console.error(err.message)
-//   }
-// })
 
 module.exports = app

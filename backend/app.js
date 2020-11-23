@@ -8,8 +8,9 @@ app.use(cors())
 app.use(express.json());
 app.use(logger('dev'));
 
-const apiRouter = require('./routes/api/_api');
-app.use('/api', apiRouter);
+const apiRoutes = require('./routes/api/_api')
+app.use('/api', apiRoutes.authorization)
+app.use('/api/users', apiRoutes.users)
 
 const port = process.env.PORT || 5000
 app.listen(port, () => {
