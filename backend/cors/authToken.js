@@ -2,7 +2,7 @@ const authToken = require("jsonwebtoken")
 
 function generateAccessToken(user) {
     // 5 minutes expiration.
-    return authToken.sign(user, process.env.ACCESS_TOKEN_SECRET, {expiresIn: "5"})
+    return authToken.sign(user, process.env.ACCESS_TOKEN_SECRET, {expiresIn: "5 min"})
 }
 
 function generateRefreshToken(user) {
@@ -15,7 +15,10 @@ function authenticate(req, res, next) {
     const token = authHeader && authHeader.split(' ')[1]
     if (token == null) return res.sendStatus(401)
     authToken.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-        if (err) return res.sendStatus(403)
+        if (err){
+            console.log(err)
+            return res.sendStatus(403)
+        }
         req.user = user
         next()
     })
