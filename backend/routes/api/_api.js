@@ -1,4 +1,5 @@
-const users = require('./users')
 const authorization = require('./authorization')
+const users = require('./users')
+const tasks = require('./tasks')
 
-module.exports = {users, authorization}
+module.exports = {authorization, users, tasks}

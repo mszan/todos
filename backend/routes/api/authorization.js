@@ -1,9 +1,8 @@
 const express = require('express')
 const app = express()
 const pool = require("../db")
-const jwt = require('jsonwebtoken')
 const moment = require('moment')
-const authToken = require("../../cors/authToken")
+const authToken = require("../../cors/authorization")
 const bcrypt = require("bcrypt")
 
 
@@ -29,16 +28,16 @@ app.post("/login", async (req, res) => {
                 pool.query("SELECT id FROM users WHERE username = ?", [req.body.username])
                     .then(userId => {
                         // Get user's refreshToken from usersRefreshTokens table.
-                        pool.query("SELECT id FROM usersRefreshTokens WHERE user = ?", [userId[0][0]['id']])
+                        pool.query("SELECT id FROM usersRefreshTokens WHERE users__id = ?", [userId[0][0]['id']])
                             .then(r => {
                                 // Check if result contains an entry.
                                 if(r[0].length < 1) {
                                     // If not found, create a new entry.
-                                    pool.query("INSERT INTO usersRefreshTokens(refreshToken, lastUpdated, user) VALUES (?, ?, ?)",
+                                    pool.query("INSERT INTO usersRefreshTokens(refreshToken, lastUpdated, users__id) VALUES (?, ?, ?)",
                                         [refreshToken, moment().format("YYYY-MM-DD HH:mm:ss"), userId[0][0]['id']])
                                 } else {
                                     // If found, update existing one.
-                                    pool.query("UPDATE usersRefreshTokens SET refreshToken = ? , lastUpdated = ? WHERE user = ?",
+                                    pool.query("UPDATE usersRefreshTokens SET refreshToken = ? , lastUpdated = ? WHERE users__id = ?",
                                         [refreshToken, moment().format("YYYY-MM-DD HH:mm:ss"), userId[0][0]['id']])
                                 }
                             })
@@ -62,7 +61,7 @@ app.post("/token", async (req, res) => {
         if (refreshToken == null) return res.sendStatus(401)
 
         // Get refreshToken from usersRefreshTokens.
-        await pool.query("SELECT usersRefreshTokens.refreshToken, usersRefreshTokens.lastUpdated, users.username FROM usersRefreshTokens JOIN users ON usersRefreshTokens.user = users.id WHERE usersRefreshTokens.refreshToken = ?",
+        await pool.query("SELECT usersRefreshTokens.refreshToken, usersRefreshTokens.lastUpdated, users.username FROM usersRefreshTokens JOIN users ON usersRefreshTokens.users__id = users.id WHERE usersRefreshTokens.refreshToken = ?",
             [refreshToken])
             .then(r => {
                 // Check if refreshToken is found in usersRefreshTokens table.

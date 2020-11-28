@@ -11,6 +11,7 @@ app.use(logger('dev'));
 const apiRoutes = require('./routes/api/_api')
 app.use('/api', apiRoutes.authorization)
 app.use('/api/users', apiRoutes.users)
+app.use('/api/tasks', apiRoutes.tasks)
 
 const port = process.env.PORT || 5000
 app.listen(port, () => {

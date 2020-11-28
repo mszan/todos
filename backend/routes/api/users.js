@@ -2,12 +2,13 @@ const express = require('express')
 const app = express()
 const pool = require("../db")
 const bcrypt = require("bcrypt")
-const authToken = require("../../cors/authToken")
+const authToken = require("../../cors/authorization")
 
 // Gets all users.
 app.get("/", authToken.authenticate, async (req, res) => {
   try {
     const getUsers = await pool.query("SELECT id, username, firstname, lastname, email, active, registerDate FROM users")
+    console.log(req.payload)
     res.json(getUsers[0])
   } catch(err) {
     console.error(err.message)
