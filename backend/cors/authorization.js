@@ -1,9 +1,9 @@
 const authorization = require("jsonwebtoken")
-const pool = require("../routes/db");
+const pool = require("../db");
 
 function generateAccessToken(payload) {
     // 5 minutes expiration.
-    return authorization.sign(payload, process.env.ACCESS_TOKEN_SECRET, {expiresIn: "5 min"})
+    return authorization.sign(payload, process.env.ACCESS_TOKEN_SECRET, {expiresIn: "15 min"})
 }
 
 function generateRefreshToken(payload) {
@@ -11,23 +11,22 @@ function generateRefreshToken(payload) {
     return authorization.sign(payload, process.env.REFRESH_TOKEN_SECRET, {expiresIn: "5 days"})
 }
 
-function authenticate(req, res, next) {
+async function authenticate(req, res, next) {
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(' ')[1]
     if (token == null) return res.sendStatus(401)
-    authorization.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, payload) => {
+    authorization.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, payload) => {
         if (err){
             return res.sendStatus(403)
         }
         req.payload = payload
 
-
         // Add userId to payload.
-        pool.query("SELECT id FROM users WHERE username = ?", [payload.username])
+        await pool.query("SELECT id FROM users WHERE username = ?", [req.payload.username])
             .then( userId => {
                 res.locals.userId = userId[0][0]['id']
-                next()
             })
+        next()
     })
 }
 

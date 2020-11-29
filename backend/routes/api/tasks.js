@@ -1,12 +1,17 @@
 const express = require('express')
 const app = express()
-const pool = require("../db")
-const bcrypt = require("bcrypt")
-const authToken = require("../../cors/authorization")
+const pool = require("../../db")
+const moment = require('moment')
 
 // Gets all active tasks related to authenticated user.
-app.get("/", authToken.authenticate, (req, res) => {
+app.get("/", (req, res) => {
     try {
+        // Check if user has privileges.
+        if (res.locals.tasksPrivileges['getTasks'] === 0) {
+            return res.sendStatus(403)
+        }
+
+        // Query for tasks.
         pool.query("SELECT id, title, description, priority, addDate, dueDate, completeDate FROM tasks WHERE users__id = ?",
             [res.locals.userId])
             .then(queryRes => {
@@ -18,21 +23,48 @@ app.get("/", authToken.authenticate, (req, res) => {
     }
 })
 
-// Add task related to authenticated user.
-app.post("/", authToken.authenticate, (req, res) => {
+// Gets all tasks.
+app.get("/all", (req, res) => {
     try {
+        // Check if user has privileges.
+        if (res.locals.tasksPrivileges['getAllTasks'] === 0) {
+            return res.sendStatus(403)
+        }
+
+        // Query for tasks.
+        pool.query("SELECT id, title, description, priority, addDate, dueDate, completeDate FROM tasks",
+            [res.locals.userId])
+            .then(queryRes => {
+                res.json(queryRes[0])
+            })
+    }
+    catch (err) {
+        console.error(err.message)
+    }
+})
+
+// Add task related to authenticated user.
+app.post("/", (req, res) => {
+    try {
+        // Check if user has privileges.
+        if (res.locals.tasksPrivileges['addTasks'] === 0) {
+            return res.sendStatus(403)
+        }
+
         // Get data from request body.
-        // *title - str
-        // *description - str
-        // *dueDate - str e.g.: 2020-11-28 23:41:43
-        // priority - int TODO: set priority schema
         let {title, description, dueDate, priority} = req.body
 
         // Check for required data.
-        if (!title || !description || !dueDate) res.json({"msg": "Missing required parameters."})
+        if (!title) res.json({"msg": "Missing required parameters."})
 
-        // Check if priority is send, if not set default.
+        // Check if priority is sent, if not set default.
         if (!priority) priority = 1
+
+        // Check if description is sent, if not set null.
+        if (!description) description = null
+
+        // Check if dueDate is sent, if not set null.
+        if (!dueDate) dueDate = null
 
         // Insert to tasks table.
         pool.query("INSERT INTO tasks(title, description, priority, dueDate, users__id) VALUES(?, ?, ?, ?, ?)",
@@ -46,8 +78,11 @@ app.post("/", authToken.authenticate, (req, res) => {
 })
 
 // Update task related to authenticated user.
-app.put("/:id", authToken.authenticate, async (req, res) => {
+app.put("/:id", async (req, res) => {
     try {
+        if (res.locals.tasksPrivileges['modifyTasks'] === 0) {
+            return res.sendStatus(403)
+        }
 
         // Checks for passed field and assigns them to new dictionary.
         const fields = {}

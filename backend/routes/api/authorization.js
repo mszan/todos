@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const pool = require("../db")
+const pool = require("../../db")
 const moment = require('moment')
 const authToken = require("../../cors/authorization")
 const bcrypt = require("bcrypt")
