@@ -6,6 +6,10 @@ const authToken = require("../../cors/authorization")
 const bcrypt = require("bcrypt")
 
 
+app.get("/login", async (req, res) => {
+    res.json({"msg": "Use POST to login."})
+})
+
 // Authenticate API users, if success generate accessToken and refreshToken.
 app.post("/login", async (req, res) => {
     try {
@@ -14,7 +18,7 @@ app.post("/login", async (req, res) => {
 
         // Check if query result is not empty.
         // If hashed password is not found (user does not exist), return message.
-        if (hashedPassword[0].length < 1) return res.json({"msg": "User and / or password invalid."})
+        if (hashedPassword[0].length < 1) return res.json({"msg": "User and / or password invalid / missing."})
 
         // Compare sent password and hashedPassword.
         bcrypt.compare(req.body.password, hashedPassword[0][0]['password'], (err, result) => {
