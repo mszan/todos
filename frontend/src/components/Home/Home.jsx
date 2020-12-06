@@ -1,0 +1,27 @@
+import React from 'react';
+import {Button, Col, Row, Skeleton, Statistic} from "antd";
+import Avatar from "antd/es/avatar/avatar";
+import {UserOutlined} from "@ant-design/icons";
+
+export const Home = () => {
+    return (
+        <React.Fragment>
+            <Row gutter={16}>
+                <Col span={12}>
+                    <Statistic title="Active Users" value={55} />
+                    <Statistic value={112893} loading />
+
+                </Col>
+                <Col span={12}>
+                    <Statistic title="Total tasks" value={112893} />
+                </Col>
+            </Row>
+            <Row gutter={16}>
+                <Col span={12}>
+                </Col>
+                <Col span={12}>
+                </Col>
+            </Row>
+        </React.Fragment>
+    );
+};

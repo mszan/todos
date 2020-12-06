@@ -1,0 +1,30 @@
+/*Site layout*/
+.site-layout .site-layout-background {
+    background: #fff;
+}
+
+/*Sidebar trigger button.*/
+.trigger {
+    font-size: 18px;
+    line-height: 64px;
+    padding: 0 24px;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+/*Logo.*/
+.logo {
+    color: white;
+    text-align: center;
+    padding: 15px
+}
+
+/*Minimum page height to 100 viewport height.*/
+.ant-layout {
+    min-height: 100vh;
+}
+
+
+.footer {
+    text-align: center;
+}
