@@ -4,13 +4,16 @@ import {
     MenuUnfoldOutlined,
     MenuFoldOutlined,
     UserOutlined,
-    VideoCameraOutlined,
-    UploadOutlined, FireOutlined, BellOutlined, FieldTimeOutlined, CheckCircleOutlined, HomeOutlined,
+    FireOutlined,
+    FieldTimeOutlined,
+    CheckCircleOutlined,
+    HomeOutlined,
+    CheckOutlined,
 } from '@ant-design/icons';
 import {Footer} from "antd/es/layout/layout";
 import './PageLayout.css'
 import SubMenu from "antd/es/menu/SubMenu";
-import {HeaderSignBtns} from "./HeaderSignBtns";
+import {HeaderBtn} from "../Registration/HeaderBtn";
 import {Link, NavLink} from "react-router-dom";
 
 const { Header, Sider, Content } = Layout;
@@ -36,7 +39,7 @@ export class PageLayout extends React.Component {
                         </Link>
                     </div>
                     <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-                        <SubMenu key="subLists" icon={<BellOutlined />} title="Tasks">
+                        <SubMenu key="subLists" icon={<CheckOutlined />} title="Tasks">
                             <Menu.Item key="1" icon={<HomeOutlined />}>All</Menu.Item>
                             <Menu.Item key="2" icon={<FireOutlined />}>Important</Menu.Item>
                             <Menu.Item key="3" icon={<FieldTimeOutlined />}>Running out</Menu.Item>
@@ -56,7 +59,7 @@ export class PageLayout extends React.Component {
                             onClick: this.toggle,
                         })}
                         {/*{this.props.title ? this.props.title : ""}*/}
-                        <HeaderSignBtns/>
+                        <HeaderBtn/>
                     </Header>
                     <Content
                         className="site-layout-background"

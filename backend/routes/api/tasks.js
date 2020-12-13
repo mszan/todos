@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 const pool = require("../../db")
-const moment = require('moment')
+// const moment = require('moment')
 
 // Gets all active tasks related to authenticated user.
 app.get("/", (req, res) => {
@@ -112,12 +112,17 @@ app.put("/:id", async (req, res) => {
 })
 
 // Delete task related to authenticated user.
-// app.delete("/:id", (req, res) => {
-//   try {
-//   } catch (err) {
-//     console.error(err.message)
-//   }
-// })
+app.delete("/:id", (req, res) => {
+  try {
+      pool.query(`DELETE FROM tasks WHERE id = ?`,
+          [req.body.id])
+          .then(() => {
+              res.json({"msg": `Task ${req.body.id} deleted.`})
+          })
+  } catch (err) {
+    console.error(err.message)
+  }
+})
 
 
 module.exports = app
