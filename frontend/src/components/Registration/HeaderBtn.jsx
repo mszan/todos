@@ -5,13 +5,17 @@ import {LoginOutlined, LogoutOutlined} from "@ant-design/icons";
 import {LoginForm} from "./LoginForm";
 import AuthService from "../../services/auth.service";
 import classes from './HeaderBtn.module.css'
+import {Redirect} from "react-router";
+
 
 export class HeaderBtn extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            currentUser: AuthService.getCurrentUser()
+            currentUser: AuthService.getCurrentUser(),
+            redirect: null
         }
+        this.handleLogout = this.handleLogout.bind(this);
     }
 
     showModal = () => {
@@ -26,7 +30,7 @@ export class HeaderBtn extends React.Component {
 
     handleLogout = () => {
         AuthService.logout();
-        window.location.reload();
+        this.setState({redirect: true})
     }
 
 
@@ -38,27 +42,31 @@ export class HeaderBtn extends React.Component {
                 <React.Fragment>
                     <Tooltip placement="bottom" title="Click to logout">
                         <Button type="primary" onClick={this.handleLogout} className={classes.headerBtn}>
-                            {currentUser.username} <LogoutOutlined />
+                            {currentUser.username} <LogoutOutlined/>
                         </Button>
                     </Tooltip>
                 </React.Fragment>
             );
-        } else {
-            return (
-                <React.Fragment>
-                    <Button type="primary" onClick={this.showModal} className={classes.headerBtn}>
-                        Login <LoginOutlined />
-                    </Button>
-                    <Modal
-                        title="Login form"
-                        visible={modalVisible}
-                        onCancel={this.handleCancel}
-                        footer={null}
-                    >
-                        <LoginForm/>
-                    </Modal>
-                </React.Fragment>
-            );
         }
+
+        if (this.state.redirect) {
+            return (<Redirect to='/' />)
+        }
+
+        return (
+            <React.Fragment>
+                <Button type="primary" onClick={this.showModal} className={classes.headerBtn}>
+                    Login <LoginOutlined />
+                </Button>
+                <Modal
+                    title="Login form"
+                    visible={modalVisible}
+                    onCancel={this.handleCancel}
+                    footer={null}
+                >
+                    <LoginForm/>
+                </Modal>
+            </React.Fragment>
+        );
     }
 }

@@ -1,28 +1,40 @@
 import React from 'react';
-import {Col, Row, Statistic} from "antd";
+import {Col, Row, Statistic, Spin} from "antd";
+import axios from "axios";
 
 export class Home extends React.Component {
     state = {
-        totalTasks: null
+        totalTasks: null,
+        totalUsers: null,
     }
 
     componentDidMount() {
+        this.getPublicData()
     }
 
-    totalTasks = () => {
+    getPublicData = () => {
+        const apiUrl = 'http://localhost:5000/api/public/'
+        axios.get(apiUrl + 'users')
+            .then(response => {
+                this.setState({totalUsers: response.data[0]['count']})
+            })
+
+        axios.get(apiUrl + 'tasks')
+            .then(response => {
+                this.setState({totalTasks: response.data[0]['count']})
+            })
     }
 
     render() {
+        const {totalTasks, totalUsers} = this.state
         return (
             <React.Fragment>
                 <Row gutter={16}>
                     <Col span={12}>
-                        <Statistic title="Active Users" value={55}/>
-                        <Statistic value={112893} loading/>
-
+                        {totalUsers ? <Statistic title="Active users" value={totalUsers}/> : <Spin />}
                     </Col>
                     <Col span={12}>
-                        <Statistic title="Total tasks" value={112893}/>
+                        {totalUsers ? <Statistic title="Total tasks" value={totalTasks}/> : <Spin />}
                     </Col>
                 </Row>
                 <Row gutter={16}>

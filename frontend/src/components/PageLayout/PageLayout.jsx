@@ -15,12 +15,14 @@ import './PageLayout.css'
 import SubMenu from "antd/es/menu/SubMenu";
 import {HeaderBtn} from "../Registration/HeaderBtn";
 import {Link, NavLink} from "react-router-dom";
+import AuthService from "../../services/auth.service";
 
 const { Header, Sider, Content } = Layout;
 
 export class PageLayout extends React.Component {
     state = {
-        collapsed: true,
+        collapsed: false,
+        currentUser: AuthService.getCurrentUser()
     };
 
     toggle = () => {
@@ -30,35 +32,50 @@ export class PageLayout extends React.Component {
     };
 
     render() {
+        const {currentUser} = this.state
+
         return (
             <Layout>
-                <Sider trigger={null} collapsible collapsed={this.state.collapsed}>
+                <Sider trigger={null} collapsible collapsed={this.state.collapsed} style={{ overflow: 'auto', height: '100vh', position: 'sticky', top: 0, left: 0, }}>
                     <div className="logo">
                         <Link to="">
                             LOGO
                         </Link>
                     </div>
                     <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-                        <SubMenu key="subLists" icon={<CheckOutlined />} title="Tasks">
-                            <Menu.Item key="1" icon={<HomeOutlined />}>All</Menu.Item>
-                            <Menu.Item key="2" icon={<FireOutlined />}>Important</Menu.Item>
-                            <Menu.Item key="3" icon={<FieldTimeOutlined />}>Running out</Menu.Item>
-                            <Menu.Item key="4" icon={<CheckCircleOutlined />}>Completed</Menu.Item>
-                        </SubMenu>
-                        <Menu.Item key="5" icon={<UserOutlined />}>
-                            <NavLink to="/users/all">
-                                Profile
+                        <Menu.Item key="1" icon={<HomeOutlined />}>
+                            <NavLink to="/">
+                                Home
                             </NavLink>
                         </Menu.Item>
+                        {currentUser ? (
+                            <React.Fragment>
+                                <SubMenu key="subLists" icon={<CheckOutlined />} title="Tasks">
+                                    <Menu.Item key="2" icon={<HomeOutlined />}>
+                                        <NavLink to="/tasks">
+                                            All
+                                        </NavLink>
+                                    </Menu.Item>
+                                    <Menu.Item key="3" icon={<FireOutlined />}>Important</Menu.Item>
+                                    <Menu.Item key="4" icon={<FieldTimeOutlined />}>Running out</Menu.Item>
+                                    <Menu.Item key="5" icon={<CheckCircleOutlined />}>Completed</Menu.Item>
+                                </SubMenu>
+                                <Menu.Item key="6" icon={<UserOutlined />}>
+                                    <NavLink to="/profile">
+                                        Profile
+                                    </NavLink>
+                                </Menu.Item>
+                            </React.Fragment>
+                        ) : null}
                     </Menu>
                 </Sider>
                 <Layout className="site-layout">
-                    <Header className="site-layout-background" style={{ padding: 0 }}>
+                    <Header className="site-layout-background" style={{padding: 0}}>
                         {React.createElement(this.state.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
                             className: 'trigger',
                             onClick: this.toggle,
                         })}
-                        {/*{this.props.title ? this.props.title : ""}*/}
+                        {this.props.children.title}
                         <HeaderBtn/>
                     </Header>
                     <Content

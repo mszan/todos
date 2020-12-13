@@ -1,4 +1,5 @@
 .headerBtn {
-    float: right;
+    right: 0;
+    position: absolute;
     margin: 16px 24px;
 }
