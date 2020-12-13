@@ -1,16 +1,16 @@
 import {PageLayout} from "../PageLayout/PageLayout";
-import {BrowserRouter as Router, Link, Switch, Route} from "react-router-dom";
-import {UsersProfile} from "../Users/UsersProfile";
-import {TasksAll} from "../Tasks/TasksAll";
+import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
+import {Profile} from "../Users/Profile";
+import {All} from "../Tasks/All";
 import {Home} from "../Home/Home";
 
 function App() {
     return (
         <Router>
             <Switch>
-                <RouteWrapper path="/tasks/all" component={TasksAll} />
-                <RouteWrapper path="/users/all" component={UsersProfile} />
-                <RouteWrapper path="" exact component={Home} />
+                <RouteWrapper path="/tasks" exact component={All}/>
+                <RouteWrapper path="/profile" exact component={Profile} />
+                <RouteWrapper path="" component={Home} />
             </Switch>
         </Router>
     );
@@ -20,7 +20,7 @@ function RouteWrapper({component: Component}) {
     return (
         <Route render={(props) =>
             <PageLayout>
-                <Component />
+                <Component/>
             </PageLayout>
         }
         />
