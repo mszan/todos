@@ -113,15 +113,27 @@ app.put("/:id", async (req, res) => {
 
 // Delete task related to authenticated user.
 app.delete("/:id", (req, res) => {
-  try {
-      pool.query(`DELETE FROM tasks WHERE id = ?`,
-          [req.body.id])
-          .then(() => {
-              res.json({"msg": `Task ${req.body.id} deleted.`})
-          })
-  } catch (err) {
-    console.error(err.message)
-  }
+    try {
+        // Get task's owner id.
+        pool.query(`SELECT users__id FROM tasks WHERE id = ?`,
+            [req.params.id])
+            .then(queryRes => {
+                const ownerId = parseInt(queryRes[0][0]['users__id'])
+                // Check if user is owner of the task.
+                if (ownerId === res.locals.userId) {
+                    // Delete task.
+                    pool.query(`DELETE FROM tasks WHERE id = ?`,
+                        [req.params.id])
+                        .then(() => {
+                            res.json({"msg": `Task ${req.params.id} deleted.`})
+                        })
+                } else {
+                    res.sendStatus(403)
+                }
+            })
+    } catch (err) {
+        console.error(err.message)
+    }
 })
 
 

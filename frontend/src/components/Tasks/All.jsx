@@ -1,15 +1,15 @@
 import React from 'react';
 import axios from "axios";
-import {List, message, Spin} from "antd";
+import {List, message, Popconfirm, Spin} from "antd";
 import InfiniteScroll from 'react-infinite-scroller';
 import authHeader from "../../services/auth-header";
+import {AddForm} from "./AddForm";
+import {DeleteOutlined} from "@ant-design/icons";
 
 
 export class All extends React.Component {
     state = {
         tasks: [],
-        loading: false,
-        hasMore: true,
     };
 
     componentDidMount() {
@@ -28,58 +28,49 @@ export class All extends React.Component {
             .catch(err => {console.log(err)})
     };
 
-    handleInfiniteOnLoad = () => {
-        let { tasks } = this.state;
-        this.setState({
-            loading: true,
-        });
-        if (tasks.length > 14) {
-            message.warning('Infinite List loaded all');
-            this.setState({
-                hasMore: false,
-                loading: false,
-            });
-            return;
-        }
-        this.getTasks(res => {
-            tasks = tasks.concat(res.results);
-            this.setState({
-                tasks,
-                loading: false,
-            });
-        });
-    };
+    confirmTaskDelete = taskId => {
+        axios.delete(`http://localhost:5000/api/tasks/${taskId}`, { headers: authHeader() })
+            .then(response => {
+                message.info('Task deleted');
+
+                const tasksArrayIndex = this.state.tasks.findIndex(x => x.id === taskId);
+                const tasksArray = this.state.tasks
+                tasksArray.splice(tasksArrayIndex, 1)
+                this.setState({tasks: tasksArray})
+            })
+            .catch(err => {
+                message.error('Something went wrong...');
+                console.log(err)
+            })
+    }
 
     render() {
         return (
-            <div className="demo-infinite-container">
-                <InfiniteScroll
-                    initialLoad={false}
-                    pageStart={0}
-                    loadMore={this.handleInfiniteOnLoad}
-                    hasMore={!this.state.loading && this.state.hasMore}
-                    useWindow={false}
-                >
-                    <List
-                        dataSource={this.state.tasks}
-                        renderItem={item => (
-                            <List.Item key={item.id}>
-                                <List.Item.Meta
-                                    title={item.title}
-                                    description={item.description}
-                                />
-                                <div>Content</div>
-                            </List.Item>
-                        )}
-                    >
-                        {this.state.loading && this.state.hasMore && (
-                            <div className="demo-loading-container">
-                                <Spin />
+            <>
+                <AddForm />
+                <List
+                    itemLayout="horizontal"
+                    dataSource={this.state.tasks}
+                    renderItem={item => (
+                        <List.Item>
+                            <List.Item.Meta
+                                title={item.title}
+                                description={item.description}
+                            />
+                            <div>
+                                <Popconfirm
+                                    title="You sure?"
+                                    onConfirm={() => this.confirmTaskDelete(item.id)}
+                                    okText="Yes"
+                                    cancelText="No"
+                                >
+                                    <a href="#"><DeleteOutlined /></a>
+                                </Popconfirm>
                             </div>
-                        )}
-                    </List>
-                </InfiniteScroll>
-            </div>
+                        </List.Item>
+                    )}
+                />
+            </>
         );
     }
 }

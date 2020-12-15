@@ -29,8 +29,8 @@ export class AddForm extends React.Component {
                 {...layout}
                 name="basic"
                 initialValues={{ remember: true }}
-                onFinish={onFinish}
-                onFinishFailed={onFinishFailed}
+                onFinish={this.onFinish}
+                onFinishFailed={this.onFinishFailed}
             >
                 <Form.Item
                     label="Username"
