@@ -8,15 +8,21 @@ import AddForm from "./AddForm";
 
 export class All extends React.Component {
     state = {
-        tasks: [],
-    };
+        tasks: []
+    }
 
     componentDidMount() {
+        this.handleTasksRefresh()
+    }
+
+    handleTasksRefresh = () => {
+        console.log(this.state)
         this.getTasks(res => {
             this.setState({
                 tasks: res.results,
             });
         });
+        console.log(this.state)
     }
 
     getTasks = () => {
@@ -24,7 +30,7 @@ export class All extends React.Component {
             .then(response => {
                 this.setState({tasks: response.data})
             })
-            .catch(err => {console.log(err)})
+            .catch(err => {console.log(err)});
     };
 
     confirmTaskDelete = taskId => {
@@ -54,7 +60,9 @@ export class All extends React.Component {
                                 imageStyle={{height: 60}}
                                 description={<span>You don't have any active tasks. Want to create one?</span>}
                             >
-                                <AddForm />
+                                <AddForm
+                                    handleTasksRefresh={this.handleTasksRefresh}
+                                />
                             </Empty>
                     }}
                     itemLayout="horizontal"
