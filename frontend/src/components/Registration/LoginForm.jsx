@@ -55,21 +55,21 @@ export class LoginForm extends React.Component {
                         placeholder="Password"
                     />
                 </Form.Item>
-                <Form.Item>
-                    <Form.Item name="remember" valuePropName="checked" noStyle>
-                        <Checkbox>Remember me</Checkbox>
-                    </Form.Item>
+                {/*<Form.Item>*/}
+                {/*    <Form.Item name="remember" valuePropName="checked" noStyle>*/}
+                {/*        <Checkbox>Remember me</Checkbox>*/}
+                {/*    </Form.Item>*/}
 
-                    <a className="login-form-forgot" href="">
-                        Forgot password
-                    </a>
-                </Form.Item>
+                {/*    <a className="login-form-forgot" href="">*/}
+                {/*        Forgot password*/}
+                {/*    </a>*/}
+                {/*</Form.Item>*/}
 
                 <Form.Item style={{marginBottom: 0}}>
                     <Button type="primary" htmlType="submit" className="login-form-button">
                         Login
                     </Button>
-                    <div style={{marginTop: '1rem'}}>Don't have an account? <a href="">Register now!</a></div>
+                    {/*<div style={{marginTop: '1rem'}}>Don't have an account? <a href="">Register now!</a></div>*/}
                 </Form.Item>
             </Form>
         );

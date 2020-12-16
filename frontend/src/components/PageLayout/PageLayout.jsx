@@ -75,7 +75,7 @@ export class PageLayout extends React.Component {
                             onClick: this.toggle,
                         })}
                         {this.props.title}
-                        <HeaderBtn/>
+                        <HeaderBtn loginRequired={this.props.loginRequired}/>
                     </Header>
                     <Content
                         className="site-layout-background"

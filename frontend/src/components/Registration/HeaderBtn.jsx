@@ -36,12 +36,13 @@ export class HeaderBtn extends React.Component {
 
     render() {
         const { username, modalVisible } = this.state;
+        console.log(this.props)
 
         if (username) {
             return (
                 <React.Fragment>
                     <Tooltip placement="bottom" title="Click to logout">
-                        <Button type="primary" onClick={this.handleLogout} className={classes.headerBtn}>
+                        <Button type="primary" onClick={this.handleLogout} className={this.props.noStyle ? null : classes.headerBtn}>
                             {username} <LogoutOutlined/>
                         </Button>
                     </Tooltip>
@@ -55,8 +56,8 @@ export class HeaderBtn extends React.Component {
 
         return (
             <React.Fragment>
-                <Button type="primary" onClick={this.showModal} className={classes.headerBtn}>
-                    Login <LoginOutlined />
+                <Button type="primary" onClick={this.showModal} className={this.props.noStyle ? null : classes.headerBtn}>
+                    <LoginOutlined />Login
                 </Button>
                 <Modal
                     title="Login form"

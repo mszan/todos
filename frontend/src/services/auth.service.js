@@ -79,8 +79,8 @@ class AuthService {
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
 
-        // Reload page
-        window.location.reload();
+        // Redirect to homepage
+        window.open(window.location.origin, "_self");
     }
 }
 

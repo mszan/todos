@@ -1,9 +1,9 @@
 import React from 'react';
 import axios from "axios";
-import {List, message, Popconfirm} from "antd";
+import {Button, Empty, List, message, Popconfirm} from "antd";
 import authHeader from "../../services/auth-header";
-import {AddForm} from "./AddForm";
-import {DeleteOutlined} from "@ant-design/icons";
+import {DeleteOutlined, PlusOutlined} from "@ant-design/icons";
+import AddForm from "./AddForm";
 
 
 export class All extends React.Component {
@@ -46,8 +46,17 @@ export class All extends React.Component {
     render() {
         return (
             <>
-                <AddForm />
                 <List
+                    locale={{
+                        emptyText:
+                            <Empty
+                                image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+                                imageStyle={{height: 60}}
+                                description={<span>You don't have any active tasks. Want to create one?</span>}
+                            >
+                                <AddForm />
+                            </Empty>
+                    }}
                     itemLayout="horizontal"
                     dataSource={this.state.tasks}
                     renderItem={item => (
