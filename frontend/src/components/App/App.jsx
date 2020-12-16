@@ -8,18 +8,18 @@ function App() {
     return (
         <Router>
             <Switch>
-                <RouteWrapper path="/tasks" exact component={All}/>
-                <RouteWrapper path="/profile" exact component={Profile} />
-                <RouteWrapper path="" component={Home} />
+                <RouteWrapper path="/tasks" exact component={All} title={"All tasks"}/>
+                <RouteWrapper path="/profile" exact component={Profile} title={"Profile"}/>
+                <RouteWrapper path="" component={Home} title={"Home"}/>
             </Switch>
         </Router>
     );
 }
 
-function RouteWrapper({component: Component}) {
+function RouteWrapper({component: Component, title: title}) {
     return (
         <Route render={(props) =>
-            <PageLayout>
+            <PageLayout title={title}>
                 <Component/>
             </PageLayout>
         }

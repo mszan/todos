@@ -1,23 +1,22 @@
 import React from 'react';
-import {Col, Row, Skeleton, Statistic} from "antd";
+import {Col, Row, Skeleton} from "antd";
 import Avatar from "antd/es/avatar/avatar";
 import {UserOutlined} from "@ant-design/icons";
-import AuthService from "../../services/auth.service";
 
 export class Profile extends React.Component {
     state = {
-        currentUser: AuthService.getCurrentUser()
+        username: localStorage.getItem("username")
     };
 
     render() {
-        const {currentUser} = this.state
+        const {username} = this.state
 
         return (
             <React.Fragment>
                 <Row gutter={16}>
                     <Col span={12}>
                         <Avatar shape="square" size={64} icon={<UserOutlined/>}/>
-                        {currentUser ? currentUser.username : <Skeleton/>}
+                        {username ? username : <Skeleton/>}
                     </Col>
                 </Row>
             </React.Fragment>

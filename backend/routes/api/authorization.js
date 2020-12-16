@@ -61,8 +61,8 @@ app.post("/login", async (req, res) => {
 // Generate new accessToken in case it's expired, requires refreshToken.
 app.post("/token", async (req, res) => {
     try {
-        const refreshToken = req.body.token
-        if (refreshToken == null) return res.sendStatus(401)
+        const refreshToken = req.body.refreshToken
+        if (refreshToken == null) return res.json({"msg": "You need to pass refreshToken."})
 
         // Get refreshToken from usersRefreshTokens.
         await pool.query("SELECT usersRefreshTokens.refreshToken, usersRefreshTokens.lastUpdated, users.username FROM usersRefreshTokens JOIN users ON usersRefreshTokens.users__id = users.id WHERE usersRefreshTokens.refreshToken = ?",

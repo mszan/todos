@@ -1,5 +1,5 @@
 import React from 'react';
-import {Col, Row, Statistic, Spin, Typography, Image, Skeleton, Divider} from "antd";
+import {Col, Row, Statistic, Spin, Typography, Image, Divider} from "antd";
 import axios from "axios";
 import todosLogo from "./todosLogo.png"
 

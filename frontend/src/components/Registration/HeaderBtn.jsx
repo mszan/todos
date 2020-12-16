@@ -12,7 +12,7 @@ export class HeaderBtn extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            currentUser: AuthService.getCurrentUser(),
+            username: localStorage.getItem("username"),
             redirect: null
         }
         this.handleLogout = this.handleLogout.bind(this);
@@ -35,14 +35,14 @@ export class HeaderBtn extends React.Component {
 
 
     render() {
-        const { currentUser, modalVisible } = this.state;
+        const { username, modalVisible } = this.state;
 
-        if (currentUser) {
+        if (username) {
             return (
                 <React.Fragment>
                     <Tooltip placement="bottom" title="Click to logout">
                         <Button type="primary" onClick={this.handleLogout} className={classes.headerBtn}>
-                            {currentUser.username} <LogoutOutlined/>
+                            {username} <LogoutOutlined/>
                         </Button>
                     </Tooltip>
                 </React.Fragment>

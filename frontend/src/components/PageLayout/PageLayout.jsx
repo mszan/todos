@@ -1,5 +1,5 @@
 import React from "react";
-import { Layout, Menu } from 'antd';
+import {Layout, Menu} from 'antd';
 import {
     MenuUnfoldOutlined,
     MenuFoldOutlined,
@@ -15,14 +15,13 @@ import './PageLayout.css'
 import SubMenu from "antd/es/menu/SubMenu";
 import {HeaderBtn} from "../Registration/HeaderBtn";
 import {Link, NavLink} from "react-router-dom";
-import AuthService from "../../services/auth.service";
 
 const { Header, Sider, Content } = Layout;
 
 export class PageLayout extends React.Component {
     state = {
         collapsed: false,
-        currentUser: AuthService.getCurrentUser()
+        username: localStorage.getItem("username")
     };
 
     toggle = () => {
@@ -32,7 +31,7 @@ export class PageLayout extends React.Component {
     };
 
     render() {
-        const {currentUser} = this.state
+        const {username} = this.state
 
         return (
             <Layout>
@@ -48,7 +47,7 @@ export class PageLayout extends React.Component {
                                 Home
                             </NavLink>
                         </Menu.Item>
-                        {currentUser ? (
+                        {username ? (
                             <React.Fragment>
                                 <SubMenu key="subLists" icon={<CheckOutlined />} title="Tasks">
                                     <Menu.Item key="2" icon={<HomeOutlined />}>
@@ -75,7 +74,7 @@ export class PageLayout extends React.Component {
                             className: 'trigger',
                             onClick: this.toggle,
                         })}
-                        {this.props.children.title}
+                        {this.props.title}
                         <HeaderBtn/>
                     </Header>
                     <Content

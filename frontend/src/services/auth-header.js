@@ -1,9 +1,15 @@
+// Get auth header for request
 export default function authHeader() {
-    const user = JSON.parse(localStorage.getItem('user'));
+    // Get data from local storage
+    const username = localStorage.getItem('username');
+    const accessToken = localStorage.getItem('accessToken');
 
-    if (user && user.accessToken) {
-        return {Authorization: "Bearer " + user.accessToken };
+    // Check if data exists
+    if (username && accessToken) {
+        // Return header
+        return {Authorization: "Bearer " + accessToken };
     } else {
+        // Return empty dict
         return {};
     }
 }

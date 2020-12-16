@@ -1,7 +1,6 @@
 import React from 'react';
 import axios from "axios";
-import {List, message, Popconfirm, Spin} from "antd";
-import InfiniteScroll from 'react-infinite-scroller';
+import {List, message, Popconfirm} from "antd";
 import authHeader from "../../services/auth-header";
 import {AddForm} from "./AddForm";
 import {DeleteOutlined} from "@ant-design/icons";
