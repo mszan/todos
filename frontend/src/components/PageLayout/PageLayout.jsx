@@ -19,15 +19,24 @@ import {Link, NavLink} from "react-router-dom";
 const { Header, Sider, Content } = Layout;
 
 export class PageLayout extends React.Component {
+    isSidebarCollapsed = () => {
+        try {
+            return JSON.parse(localStorage.getItem("sidebarCollapsed"))
+        } catch {
+            return false
+        }
+    }
+
     state = {
-        collapsed: false,
+        collapsed: this.isSidebarCollapsed(),
         username: localStorage.getItem("username")
-    };
+    }
 
     toggle = () => {
         this.setState({
             collapsed: !this.state.collapsed,
         });
+        localStorage.setItem("sidebarCollapsed", String(!this.state.collapsed))
     };
 
     render() {
