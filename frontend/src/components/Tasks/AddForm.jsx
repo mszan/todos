@@ -1,5 +1,13 @@
-import {Modal, Button, Radio, Form, Input, message, notification, Tooltip} from 'antd';
-import {InfoCircleOutlined, PlusOutlined, SmileOutlined} from "@ant-design/icons";
+import {Modal, Button, Radio, Form, Input, message, notification, Tooltip, DatePicker} from 'antd';
+import {
+    DownCircleTwoTone,
+    DownOutlined,
+    InfoCircleOutlined,
+    PlusOutlined,
+    SmileOutlined,
+    UpCircleTwoTone,
+    UpOutlined
+} from "@ant-design/icons";
 import React  from "react";
 import axios from "axios";
 import authHeader from "../../services/auth-header";
@@ -8,21 +16,13 @@ import authHeader from "../../services/auth-header";
 export default function AddForm(props) {
     const [visible, setVisible] = React.useState(false);
     const [confirmLoading, setConfirmLoading] = React.useState(false);
+
     const [form] = Form.useForm();
     const API_URL = "http://localhost:5000/api/"
 
     const showModal = () => {
         setVisible(true);
     };
-
-    // const handleOk = () => {
-    //     setModalText('The modal will be closed after two seconds');
-    //     setConfirmLoading(true);
-    //     setTimeout(() => {
-    //         setVisible(false);
-    //         setConfirmLoading(false);
-    //     }, 2000);
-    // };
 
     const handleFormFinishOk = values => {
         // Hide modal
@@ -31,9 +31,12 @@ export default function AddForm(props) {
         // Reset form fields
         form.resetFields();
 
+        console.log(values.dueDate)
+
         // Send request to add task
         axios.post(API_URL + "tasks",{
-            title: values['title']
+            title: values['title'],
+            dueDate: values.dueDate ? values.dueDate.format('YYYY-MM-DD HH:mm:ss') : null
         }, { headers: authHeader() })
             .then(response => {
                 notification.success({
@@ -53,10 +56,6 @@ export default function AddForm(props) {
             })
     };
 
-    const handleFormFinishErr = errorInfo => {
-        console.log(errorInfo);
-    };
-
     const handleModalCancel = () => {
         setVisible(false);
     };
@@ -66,7 +65,6 @@ export default function AddForm(props) {
             <Modal
                 title="Adding new task"
                 visible={visible}
-                // onOk={handleOk}
                 confirmLoading={confirmLoading}
                 onCancel={handleModalCancel}
                 footer={
@@ -78,15 +76,48 @@ export default function AddForm(props) {
                     form={form}
                     layout="vertical"
                     onFinish={handleFormFinishOk}
-                    onFinishFailed={handleFormFinishErr}
+                    onFinishFailed={err => console.log(err)}
                 >
                     <Form.Item
                         label="Title"
                         name="title"
-                        tooltip="DETAILED INFO"
+                        tooltip="DETAILS HERE"
                         rules={[{ required: true, message: 'Title is required.' }]}
                     >
                         <Input placeholder="e.g. Take the trash out" />
+                    </Form.Item>
+
+                    <Form.Item
+                        label="Due date"
+                        name="dueDate"
+                        tooltip="DETAILS HERE"
+                    >
+                        <DatePicker
+                            showNow={false}
+                            showTime={{format: "HH:mm"}}
+                            format="YYYY-MM-DD HH:mm"
+                            style={{width: "100%"}}
+                        />
+                    </Form.Item>
+
+                    <Form.Item
+                        label="Description"
+                        name="description"
+                        tooltip="DETAILS HERE"
+                    >
+                        <Input.TextArea rows={3} autoSize={{ minRows: 3 }} showCount maxLength={300} />
+                    </Form.Item>
+
+                    <Form.Item
+                        label="Priority"
+                        name="priority"
+                        tooltip="DETAILS HERE"
+                    >
+                        <Radio.Group defaultValue="b" buttonStyle="solid" style={{width: "100%", textAlign: "center"}}>
+                            <Radio.Button style={{width: "33.3%"}} value="a"><UpCircleTwoTone twoToneColor={"#e52807"}/> High</Radio.Button>
+                            <Radio.Button style={{width: "33.3%"}} value="b">Normal</Radio.Button>
+                            <Radio.Button style={{width: "33.3%"}} value="c"><DownCircleTwoTone twoToneColor={"#6ae74e"}/> Low</Radio.Button>
+                        </Radio.Group>
                     </Form.Item>
                 </Form>
             </Modal>

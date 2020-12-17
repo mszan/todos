@@ -90,6 +90,7 @@ app.put("/:id", async (req, res) => {
         if (req.body.description) fields['description'] = req.body.description
         if (req.body.dueDate) fields['dueDate'] = req.body.dueDate
         if (req.body.priority) fields['priority'] = req.body.priority
+        if (req.body.active) fields['active'] = req.body.active
 
         if (req.body.completeDate) fields['completeDate'] = req.body.completeDate
         if (req.body.completeDate === null) fields['completeDate'] = null
