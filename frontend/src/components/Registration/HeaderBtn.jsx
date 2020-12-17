@@ -41,7 +41,7 @@ export class HeaderBtn extends React.Component {
         if (username) {
             return (
                 <React.Fragment>
-                    <Tooltip placement="bottom" title="Click to logout">
+                    <Tooltip placement="bottom" title="Logout">
                         <Button type="primary" onClick={this.handleLogout} className={this.props.noStyle ? null : classes.headerBtn}>
                             {username} <LogoutOutlined/>
                         </Button>

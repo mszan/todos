@@ -1,5 +1,5 @@
-import {Modal, Button, Radio, Form, Input, message} from 'antd';
-import {InfoCircleOutlined, PlusOutlined} from "@ant-design/icons";
+import {Modal, Button, Radio, Form, Input, message, notification, Tooltip} from 'antd';
+import {InfoCircleOutlined, PlusOutlined, SmileOutlined} from "@ant-design/icons";
 import React  from "react";
 import axios from "axios";
 import authHeader from "../../services/auth-header";
@@ -36,14 +36,20 @@ export default function AddForm(props) {
             title: values['title']
         }, { headers: authHeader() })
             .then(response => {
-                message.success("Task added")
+                notification.success({
+                    message: 'Task added',
+                    placement: 'bottomRight'
+                });
 
                 // Lift the state up to update list with added task
                 props.handleTasksRefresh()
             })
             .catch(err => {
                 console.log(err)
-                message.success("Error")
+                notification.info({
+                    message: 'Cannot add task',
+                    placement: 'bottomRight'
+                });
             })
     };
 
@@ -84,7 +90,11 @@ export default function AddForm(props) {
                     </Form.Item>
                 </Form>
             </Modal>
-            <Button type="primary" onClick={showModal}><PlusOutlined />Add task</Button>
+            <Tooltip title="Add task">
+                <Button type="primary" onClick={showModal} style={props.alignRight ? {float: 'right', marginBottom: 24} : null}>
+                    <PlusOutlined />{props.noText ? null : "Add task"}
+                </Button>
+            </Tooltip>
         </>
     );
 };
