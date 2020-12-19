@@ -1,18 +1,16 @@
 import React from 'react';
 import axios from "axios";
 import moment from "moment"
-import {Button, Divider, Empty, List, message, notification, Popconfirm, Spin, Tooltip} from "antd";
+import {Divider, Empty, List, notification, Popconfirm, Radio, Spin} from "antd";
 import authHeader from "../../services/auth-header";
 import {
+    ArrowDownOutlined,
     CheckOutlined, ClockCircleOutlined,
     CloseOutlined,
-    DeleteOutlined,
-    LoadingOutlined,
-    PlusOutlined,
-    SmileOutlined
+    DeleteOutlined, DownCircleTwoTone, DownOutlined, ExclamationOutlined,
+    LoadingOutlined, UpCircleTwoTone,
 } from "@ant-design/icons";
 import AddForm from "./AddForm";
-import Title from "antd/es/typography/Title";
 import Text from "antd/es/typography/Text";
 import {Link} from "react-router-dom";
 
@@ -72,9 +70,9 @@ export class All extends React.Component {
 
     handleTaskComplete = task => {
         axios.put(`http://localhost:5000/api/tasks/${task.id}`, {
-                active: "0",
-                completeDate: moment().format('YYYY-MM-DD HH:mm:ss')
-            }, {headers: authHeader()})
+            active: "0",
+            completeDate: moment().format('YYYY-MM-DD HH:mm:ss')
+        }, {headers: authHeader()})
             .then(response => {
                 notification.success({
                     message: 'Task marked as completed',
@@ -126,7 +124,7 @@ export class All extends React.Component {
                                     {item.dueDate ?
                                         <React.Fragment>
                                             <Text type="secondary" style={{color: "#bfc0c4"}}>
-                                                <ClockCircleOutlined /> {moment(item.dueDate).format('DD MMM YYYY')}
+                                                <ClockCircleOutlined/> {moment(item.dueDate).format('DD MMM YYYY')}
                                             </Text>
                                             <Divider type="vertical"/>
                                         </React.Fragment>
@@ -147,8 +145,12 @@ export class All extends React.Component {
                             <List.Item.Meta
                                 title={
                                     <React.Fragment>
+                                        {item.priority === 1 ?
+                                            null :
+                                            item.priority === 2 ?
+                                                <ExclamationOutlined style={{color: "#e52807"}}/> :
+                                                <ArrowDownOutlined style={{color: "#0090ff"}}/>}
                                         {item.title}
-                                        {/*<Text type="secondary" style={{color: "#bfc0c4"}}> due {item.dueDate}</Text>*/}
                                     </React.Fragment>
                                 }
                                 description={item.description}

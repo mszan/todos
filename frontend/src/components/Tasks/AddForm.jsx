@@ -1,7 +1,8 @@
 import {Modal, Button, Radio, Form, Input, message, notification, Tooltip, DatePicker} from 'antd';
 import {
+    ArrowDownOutlined,
     DownCircleTwoTone,
-    DownOutlined,
+    DownOutlined, ExclamationOutlined,
     InfoCircleOutlined,
     PlusOutlined,
     SmileOutlined,
@@ -35,8 +36,9 @@ export default function AddForm(props) {
 
         // Send request to add task
         axios.post(API_URL + "tasks",{
-            title: values['title'],
-            dueDate: values.dueDate ? values.dueDate.format('YYYY-MM-DD HH:mm:ss') : null
+            title: values.title,
+            dueDate: values.dueDate ? values.dueDate.format('YYYY-MM-DD HH:mm:ss') : null,
+            priority: values.priority
         }, { headers: authHeader() })
             .then(response => {
                 notification.success({
@@ -113,10 +115,10 @@ export default function AddForm(props) {
                         name="priority"
                         tooltip="DETAILS HERE"
                     >
-                        <Radio.Group defaultValue="b" buttonStyle="solid" style={{width: "100%", textAlign: "center"}}>
-                            <Radio.Button style={{width: "33.3%"}} value="a"><UpCircleTwoTone twoToneColor={"#e52807"}/> High</Radio.Button>
-                            <Radio.Button style={{width: "33.3%"}} value="b">Normal</Radio.Button>
-                            <Radio.Button style={{width: "33.3%"}} value="c"><DownCircleTwoTone twoToneColor={"#6ae74e"}/> Low</Radio.Button>
+                        <Radio.Group defaultValue="1" buttonStyle="solid" style={{width: "100%", textAlign: "center"}}>
+                            <Radio.Button style={{width: "33.3%"}} value="2"><ExclamationOutlined style={{color: "#e52807"}}/> High</Radio.Button>
+                            <Radio.Button style={{width: "33.3%"}} value="1">Normal</Radio.Button>
+                            <Radio.Button style={{width: "33.3%"}} value="0"><ArrowDownOutlined style={{color: "#0090ff"}}/> Low</Radio.Button>
                         </Radio.Group>
                     </Form.Item>
                 </Form>
