@@ -1,22 +1,43 @@
-import {Button, DatePicker, Form, Input, Modal, notification, Radio, Tooltip} from 'antd';
+import {Button, DatePicker, Form, Input, Modal, notification, Radio} from 'antd';
 import {ArrowDownOutlined, ExclamationOutlined, PlusOutlined} from "@ant-design/icons";
 import React from "react";
+import moment from "moment";
 import axios from "axios";
 import authHeader from "../../services/auth-header";
-import QueueAnim from "rc-queue-anim";
-import Animate from "rc-animate";
 
-// <PlusOutlined style={{color: "#1890ff"}}/>
-export default function AddForm(props) {
-    const [visible, setVisible] = React.useState(false);
-    const [confirmLoading, setConfirmLoading] = React.useState(false);
-
+export default function EditForm(props) {
+    const [visible, setVisible] = React.useState(!!props.task);
     const [form] = Form.useForm();
-    const API_URL = "http://localhost:5000/api/"
 
-    const showModal = () => {
-        setVisible(true);
-    };
+    React.useEffect(() => {
+        // TODO: remove this due to passed task, no need to check
+        setVisible(!!props.task)
+
+        // If task is passed, set form fields values
+        if(props.task) setFormFieldsValues()
+    }, [props])
+
+    const setFormFieldsValues = () => {
+        // Reset all field values
+        form.resetFields()
+
+        // For each field in props.task
+        for (const [key, val] of Object.entries(props.task)) {
+            // If props.task field is in form
+            if (form.getFieldInstance([key])) {
+                // If field is date, convert it to moment()
+                if (key === "dueDate") {
+                    if(val) form.setFieldsValue({[key]: moment(val)})
+                }
+                // If not, just set the value
+                else {
+                    if (val) form.setFieldsValue({[key]: String(val)})
+                }
+            }
+        }
+    }
+
+    const API_URL = "http://localhost:5000/api/"
 
     const handleFormFinishOk = values => {
         // Hide modal
@@ -25,10 +46,8 @@ export default function AddForm(props) {
         // Reset form fields
         form.resetFields();
 
-        console.log(values.dueDate)
-
         // Send request to add task
-        axios.post(API_URL + "tasks",{
+        axios.put(API_URL + `tasks/${props.task.id}`,{
             title: values.title,
             description: values.description ? values.description : null,
             dueDate: values.dueDate ? values.dueDate.format('YYYY-MM-DD HH:mm:ss') : null,
@@ -36,7 +55,7 @@ export default function AddForm(props) {
         }, { headers: authHeader() })
             .then(response => {
                 notification.success({
-                    message: 'Task added',
+                    message: 'Task edited',
                     placement: 'bottomLeft'
                 });
 
@@ -46,10 +65,13 @@ export default function AddForm(props) {
             .catch(err => {
                 console.log(err)
                 notification.info({
-                    message: 'Cannot add task',
+                    message: 'Cannot edit task',
                     placement: 'bottomLeft'
                 });
             })
+
+        // Clear editForm.task prop
+        props.handleTaskClear()
     };
 
     const handleModalCancel = () => {
@@ -59,16 +81,16 @@ export default function AddForm(props) {
     return (
         <>
             <Modal
-                title="Adding new task"
+                forceRender
+                title="Edit task"
                 visible={visible}
-                confirmLoading={confirmLoading}
                 onCancel={handleModalCancel}
                 footer={
-                    <Button form="taskAddForm" type="primary" htmlType="submit"><PlusOutlined />Add task</Button>
+                    <Button form="taskEditForm" type="primary" htmlType="submit"><PlusOutlined />Edit task</Button>
                 }
             >
                 <Form
-                    id="taskAddForm"
+                    id="taskEditForm"
                     form={form}
                     layout="vertical"
                     onFinish={handleFormFinishOk}
@@ -109,7 +131,7 @@ export default function AddForm(props) {
                         name="priority"
                         tooltip="DETAILS HERE"
                     >
-                        <Radio.Group defaultValue="1" buttonStyle="solid" style={{width: "100%", textAlign: "center"}}>
+                        <Radio.Group buttonStyle="solid" style={{width: "100%", textAlign: "center"}}>
                             <Radio.Button style={{width: "33.3%"}} value="2"><ExclamationOutlined style={{color: "#e52807"}}/> High</Radio.Button>
                             <Radio.Button style={{width: "33.3%"}} value="1">Normal</Radio.Button>
                             <Radio.Button style={{width: "33.3%"}} value="3"><ArrowDownOutlined style={{color: "#46cb38"}}/> Low</Radio.Button>
@@ -117,11 +139,6 @@ export default function AddForm(props) {
                     </Form.Item>
                 </Form>
             </Modal>
-            {/*<QueueAnim delay={1500}>*/}
-                <Button key="addFormBtn" title="New task" type="primary" onClick={showModal} style={props.alignRight ? {float: 'right', marginBottom: 24} : null}>
-                    <PlusOutlined /> New task
-                </Button>
-            {/*</QueueAnim>*/}
         </>
     );
 };

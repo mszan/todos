@@ -1,5 +1,5 @@
 import {PageLayout} from "../PageLayout/PageLayout";
-import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
+import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import {Profile} from "../Users/Profile";
 import {Active} from "../Tasks/Active";
 import {Home} from "../Home/Home";
@@ -11,31 +11,39 @@ function App() {
     return (
         <Router>
             <Switch>
-                <RouteWrapper path="/tasks/completed" exact
-                              component={Completed}
-                              title={"Completed tasks"}
-                              loginRequired
+                <RouteWrapper
+                    navKey="4"
+                    path="/tasks/completed" exact
+                    component={Completed}
+                    title={"Completed tasks"}
+                    loginRequired
                 />
-                <RouteWrapper path="/tasks" exact
-                              component={Active}
-                              title={"Active tasks"}
-                              loginRequired
+                <RouteWrapper
+                    navKey="3"
+                    path="/tasks" exact
+                    component={Active}
+                    title={"Active tasks"}
+                    loginRequired
                 />
-                <RouteWrapper path="/profile" exact
-                              component={Profile}
-                              title={"Profile"}
-                              loginRequired
+                <RouteWrapper
+                    navKey="2"
+                    path="/profile" exact
+                    component={Profile}
+                    title={"Profile"}
+                    loginRequired
                 />
-                <RouteWrapper path=""
-                              component={Home}
-                              title={"Home"}
+                <RouteWrapper
+                    navKey="1"
+                    path=""
+                    component={Home}
+                    title={"Home"}
                 />
             </Switch>
         </Router>
     );
 }
 
-function RouteWrapper({component: Component, title: title, loginRequired: loginRequired}) {
+function RouteWrapper({component: Component, title: title, loginRequired: loginRequired, navKey: navKey}) {
     const username = localStorage.getItem("username")
     const accessToken = localStorage.getItem("accessToken")
 
@@ -43,6 +51,7 @@ function RouteWrapper({component: Component, title: title, loginRequired: loginR
         <Route render={(props) =>
             <PageLayout
                 title={username && accessToken ? title : null}
+                navKey={navKey ? navKey : null}
             >
                 {!loginRequired ?
                     <Component/> : username && accessToken ?

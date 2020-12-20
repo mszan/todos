@@ -36,8 +36,6 @@ export class HeaderBtn extends React.Component {
 
     render() {
         const { username, modalVisible } = this.state;
-        console.log(this.props)
-
         if (username) {
             return (
                 <React.Fragment>
