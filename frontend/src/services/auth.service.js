@@ -9,6 +9,12 @@ axios.interceptors.response.use(response => {
     // Response bad
     return new Promise((resolve, reject) => {
         const originalReq = err.config;
+        // If response is not present
+        if (!err.response) {
+            console.log(err.config)
+            return Promise.reject(err);
+        }
+
         // If response returned 403
         if ( err.response.status === 403 && err.config )
         {

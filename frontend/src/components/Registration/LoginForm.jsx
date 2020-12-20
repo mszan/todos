@@ -66,7 +66,7 @@ export class LoginForm extends React.Component {
                 {/*</Form.Item>*/}
 
                 <Form.Item style={{marginBottom: 0}}>
-                    <Button type="primary" htmlType="submit" className="login-form-button">
+                    <Button type="primary" htmlType="submit" className="registrationFormBtn">
                         Login
                     </Button>
                     {/*<div style={{marginTop: '1rem'}}>Don't have an account? <a href="">Register now!</a></div>*/}

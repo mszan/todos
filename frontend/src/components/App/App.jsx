@@ -4,7 +4,7 @@ import {Profile} from "../Users/Profile";
 import {Active} from "../Tasks/Active";
 import {Home} from "../Home/Home";
 import {Result} from "antd";
-import {HeaderBtn} from "../Registration/HeaderBtn";
+import {HeaderBtnLogin} from "../Registration/HeaderBtnLogin";
 import {Completed} from "../Tasks/Completed";
 
 function App() {
@@ -59,7 +59,7 @@ function RouteWrapper({component: Component, title: title, loginRequired: loginR
                         <Result
                             title="User not logged in"
                             subTitle="You need to be logged in to view this page."
-                            extra={<HeaderBtn noStyle/>}
+                            extra={<HeaderBtnLogin noStyle/>}
                         />
                 }
             </PageLayout>

@@ -4,11 +4,10 @@ import Modal from "antd/es/modal/Modal";
 import {LoginOutlined, LogoutOutlined} from "@ant-design/icons";
 import {LoginForm} from "./LoginForm";
 import AuthService from "../../services/auth.service";
-import classes from './HeaderBtn.module.css'
 import {Redirect} from "react-router";
 
 
-export class HeaderBtn extends React.Component {
+export class HeaderBtnLogin extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -40,7 +39,7 @@ export class HeaderBtn extends React.Component {
             return (
                 <React.Fragment>
                     <Tooltip placement="bottom" title="Logout">
-                        <Button type="primary" onClick={this.handleLogout} className={this.props.noStyle ? null : classes.headerBtn}>
+                        <Button type="primary" onClick={this.handleLogout}>
                             {username} <LogoutOutlined/>
                         </Button>
                     </Tooltip>
@@ -54,7 +53,7 @@ export class HeaderBtn extends React.Component {
 
         return (
             <React.Fragment>
-                <Button type="primary" onClick={this.showModal} className={this.props.noStyle ? null : classes.headerBtn}>
+                <Button type="primary" onClick={this.showModal}>
                     <LoginOutlined />Login
                 </Button>
                 <Modal

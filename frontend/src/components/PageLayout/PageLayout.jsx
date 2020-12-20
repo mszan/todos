@@ -1,7 +1,6 @@
 import React from "react";
-import {Card, Layout, Menu, Statistic} from 'antd';
+import {Col, Layout, Menu, Row} from 'antd';
 import {
-    ArrowUpOutlined,
     CheckCircleOutlined,
     CheckOutlined,
     HomeOutlined,
@@ -12,12 +11,11 @@ import {
 import {Footer} from "antd/es/layout/layout";
 import './PageLayout.css'
 import SubMenu from "antd/es/menu/SubMenu";
-import {HeaderBtn} from "../Registration/HeaderBtn";
+import {HeaderBtnLogin} from "../Registration/HeaderBtnLogin";
+import {HeaderBtnRegister} from "../Registration/HeaderBtnRegister";
 import {Link, NavLink} from "react-router-dom";
-import QueueAnim from "rc-queue-anim";
 import Animate from "rc-animate";
 import Text from "antd/es/typography/Text";
-
 const { Header, Sider, Content } = Layout;
 
 export class PageLayout extends React.Component {
@@ -88,13 +86,19 @@ export class PageLayout extends React.Component {
                 <Layout className="site-layout">
                     <Header className="site-layout-background" style={{padding: 0}}>
                         <Animate transitionName="fade" transitionAppear>
-                            {React.createElement(this.state.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
-                                key: 'sidebarCollapse',
-                                className: 'trigger',
-                                onClick: this.toggle,
-                            })}
-                            <Text key="pageTitle">{this.props.title}</Text>
-                            <HeaderBtn key="headerBtn" loginRequired={this.props.loginRequired}/>
+                            <Row key="pageHeader" justify="space-between">
+                                <Col>
+                                    {React.createElement(this.state.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
+                                        className: 'trigger',
+                                        onClick: this.toggle,
+                                    })}
+                                    <Text>{this.props.title}</Text>
+                                </Col>
+                                <Col style={{marginRight: "1rem"}}>
+                                    <HeaderBtnRegister/>
+                                    <HeaderBtnLogin/>
+                                </Col>
+                            </Row>
                         </Animate>
                     </Header>
                     <Content
