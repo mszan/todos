@@ -1,18 +1,24 @@
 import {PageLayout} from "../PageLayout/PageLayout";
 import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import {Profile} from "../Users/Profile";
-import {All} from "../Tasks/All";
+import {Active} from "../Tasks/Active";
 import {Home} from "../Home/Home";
 import {Result} from "antd";
 import {HeaderBtn} from "../Registration/HeaderBtn";
+import {Completed} from "../Tasks/Completed";
 
 function App() {
     return (
         <Router>
             <Switch>
+                <RouteWrapper path="/tasks/completed" exact
+                              component={Completed}
+                              title={"Completed tasks"}
+                              loginRequired
+                />
                 <RouteWrapper path="/tasks" exact
-                              component={All}
-                              title={"All tasks"}
+                              component={Active}
+                              title={"Active tasks"}
                               loginRequired
                 />
                 <RouteWrapper path="/profile" exact

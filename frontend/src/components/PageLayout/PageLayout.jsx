@@ -61,12 +61,16 @@ export class PageLayout extends React.Component {
                                 <SubMenu key="subLists" icon={<CheckOutlined />} title="Tasks">
                                     <Menu.Item key="2" icon={<HomeOutlined />}>
                                         <NavLink to="/tasks">
-                                            All
+                                            Active
                                         </NavLink>
                                     </Menu.Item>
-                                    <Menu.Item key="3" icon={<FireOutlined />}>Important</Menu.Item>
-                                    <Menu.Item key="4" icon={<FieldTimeOutlined />}>Running out</Menu.Item>
-                                    <Menu.Item key="5" icon={<CheckCircleOutlined />}>Completed</Menu.Item>
+                                    {/*<Menu.Item key="3" icon={<FireOutlined />}>Important</Menu.Item>*/}
+                                    {/*<Menu.Item key="4" icon={<FieldTimeOutlined />}>Running out</Menu.Item>*/}
+                                    <Menu.Item key="5" icon={<CheckCircleOutlined />}>
+                                        <NavLink to="/tasks/completed">
+                                            Completed
+                                        </NavLink>
+                                    </Menu.Item>
                                 </SubMenu>
                                 <Menu.Item key="6" icon={<UserOutlined />}>
                                     <NavLink to="/profile">

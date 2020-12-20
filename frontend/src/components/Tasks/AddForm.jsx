@@ -37,6 +37,7 @@ export default function AddForm(props) {
         // Send request to add task
         axios.post(API_URL + "tasks",{
             title: values.title,
+            description: values.description ? values.description : null,
             dueDate: values.dueDate ? values.dueDate.format('YYYY-MM-DD HH:mm:ss') : null,
             priority: values.priority
         }, { headers: authHeader() })

@@ -15,7 +15,7 @@ import Text from "antd/es/typography/Text";
 import {Link} from "react-router-dom";
 
 
-export class All extends React.Component {
+export class Active extends React.Component {
     state = {
         tasks: [],
         tasksFetched: false
@@ -34,7 +34,7 @@ export class All extends React.Component {
     }
 
     getTasks = () => {
-        axios.get('http://localhost:5000/api/tasks/', {headers: authHeader()})
+        axios.get('http://localhost:5000/api/tasks/?active=1', {headers: authHeader()})
             .then(response => {
                 this.setState({
                     tasks: response.data,
@@ -123,8 +123,10 @@ export class All extends React.Component {
                                 <React.Fragment>
                                     {item.dueDate ?
                                         <React.Fragment>
-                                            <Text type="secondary" style={{color: "#bfc0c4"}}>
-                                                <ClockCircleOutlined/> {moment(item.dueDate).format('DD MMM YYYY')}
+                                            <Text type="secondary"
+                                                  style={moment(item.dueDate).isAfter(moment()) ? {color: "#bfc0c4"} : {color: "#e52807"}}>
+                                                <ClockCircleOutlined
+                                                    style={{marginLeft: 10}}/> {moment(item.dueDate).format('DD MMM YYYY HH:mm')}
                                             </Text>
                                             <Divider type="vertical"/>
                                         </React.Fragment>
