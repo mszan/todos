@@ -14,6 +14,7 @@ app.get("/", (req, res) => {
         // Query for tasks.
         let query = `SELECT id, active, title, description, priority, addDate, dueDate, completeDate FROM tasks WHERE users__id = ${res.locals.userId}`
         req.query.active ? query += ` AND active = ${req.query.active}` : null
+        query += ` ORDER BY dueDate DESC`
         pool.query(query)
             .then(queryRes => {
                 res.json(queryRes[0])
