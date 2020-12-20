@@ -5,9 +5,35 @@ const moment = require('moment')
 const authToken = require("../../cors/authorization")
 const bcrypt = require("bcrypt")
 
+// Register new user
+app.post("/register", async (req, res) => {
+    try {
+        // Get data from request body.
+        let {username, password, email, firstname, lastname} = req.body
 
-app.get("/login", async (req, res) => {
-    res.json({"msg": "Use POST to login."})
+        // Check for required data.
+        if (!username || !password || !email) res.json({"msg": "Missing required parameters."})
+
+        // Check if firstname is sent, if not set null.
+        if (!firstname) firstname = null
+
+        // Check if lastname is sent, if not set null.
+        if (!lastname) lastname = null
+
+        // Generate salt.
+        const salt = await bcrypt.genSalt()
+
+        // Generate hashed password.
+        const hashedPassword = await bcrypt.hash(password, salt)
+
+        // Insert user to users table.
+        await pool.query("INSERT INTO users(username, password, email, firstname, lastname) VALUES(?, ?, ?, ?, ?)",
+            [username, hashedPassword, email, firstname, lastname])
+
+        res.json({"msg": `User '${username}' registered.`})
+    } catch (err) {
+        console.error(err.message)
+    }
 })
 
 // Authenticate API users, if success generate accessToken and refreshToken.
