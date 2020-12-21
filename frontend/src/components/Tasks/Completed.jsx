@@ -1,10 +1,10 @@
 import React from 'react';
 import axios from "axios";
 import moment from "moment"
-import {Row, Col, Divider, Empty, List, notification, Popconfirm, Spin, Statistic} from "antd";
+import {Col, Divider, Empty, List, notification, Popconfirm, Row, Statistic} from "antd";
 import authHeader from "../../services/auth-header";
 import {
-    ArrowDownOutlined, ArrowUpOutlined,
+    ArrowDownOutlined,
     CheckOutlined,
     ClockCircleOutlined,
     CloseOutlined,
@@ -16,11 +16,9 @@ import {
 } from "@ant-design/icons";
 import Text from "antd/es/typography/Text";
 import {Link} from "react-router-dom";
-import AddForm from "./AddForm";
 import Animate from "rc-animate";
 import QueueAnim from "rc-queue-anim";
-import Texty from 'rc-texty';
-
+import emptyImg from "./empty.svg"
 
 
 export class Completed extends React.Component {
@@ -33,7 +31,13 @@ export class Completed extends React.Component {
                 completedLast7Days: "",
                 completedLast30Days: ""
             },
-            tasksFetched: false
+            tasksFetched: false,
+            animations: {
+                emptyTasks: {
+                    delay: 0
+                }
+            }
+
         }
         this.getTasksStats = this.getTasksStats.bind(this)
     }
@@ -51,6 +55,11 @@ export class Completed extends React.Component {
                 // Set state with tasks from response
                 this.setState({
                     tasks: response.data,
+                    animations: {
+                        emptyTasks: {
+                            delay: 600
+                        }
+                    },
                     tasksFetched: true
                 })
             })
@@ -154,10 +163,10 @@ export class Completed extends React.Component {
 
     render() {
         return (
-            <React.Fragment>
-                {this.state.tasksFetched ?
-                    <React.Fragment>
-                        <QueueAnim component={Row} type="scaleBig">
+            <Row>
+                {this.state.tasksFetched && this.state.tasks.length > 0 ?
+                    <QueueAnim component={Col} componentProps={{span: 24}} type={["scaleY", "scaleY"]} delay={[450, 0]}>
+                        <Row key="statistics">
                             <Col span={6} key={"total"}>
                                 <Statistic
                                     title="Total"
@@ -187,9 +196,8 @@ export class Completed extends React.Component {
                                     formatter={(val) => val}
                                 />
                             </Col>
-                        </QueueAnim>
-
-                        <Row justify="center">
+                        </Row>
+                        <Row key="taskList" justify="center">
                             <Col span={24}>
                                 <Divider />
                                 <List
@@ -260,30 +268,26 @@ export class Completed extends React.Component {
                                 </List>
                             </Col>
                         </Row>
-                    </React.Fragment>
+                    </QueueAnim>
                     :
-                    <Animate exclusive={true} transitionName="fade" transitionAppear>
-                        <Row justify="center">
-                            <Col>
-                                {this.state.tasksFetched && this.state.tasks.length <= 0 ?
-                                    <Empty
-                                        key="emptyNoActiveTasks"
-                                        image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-                                        imageStyle={{height: 60}}
-                                        description={<span>Seems empty...</span>}
-                                    /> :
-                                    <Empty
-                                        key="emptyFetchingTasks"
-                                        image={<LoadingOutlined style={{fontSize: 24}} spin/>}
-                                        imageStyle={{height: 60}}
-                                        description={<span>Fetching tasks...</span>}
-                                    >
-                                    </Empty>}
-                            </Col>
-                        </Row>
-                    </Animate>
+                    <QueueAnim component={Col} componentProps={{span: 24}} type="scaleY" delay={[this.state.animations.emptyTasks.delay, 0]}>
+                        <Empty
+                            key="emptyNoActiveTasks"
+                            image={
+                                this.state.tasksFetched && this.state.tasks.length <= 0 ?
+                                    emptyImg :
+                                    <LoadingOutlined style={{fontSize: 24}} spin/>
+                            }
+                            imageStyle={{height: 60}}
+                            description={<Text type="secondary">{
+                                this.state.tasksFetched && this.state.tasks.length <= 0 ?
+                                    "Seems empty so far..." :
+                                    "Fetching tasks..."
+                            }</Text>}
+                        />
+                    </QueueAnim>
                 }
-            </React.Fragment>
+            </Row>
         );
     }
 }

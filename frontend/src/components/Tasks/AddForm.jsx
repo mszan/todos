@@ -118,7 +118,7 @@ export default function AddForm(props) {
                 </Form>
             </Modal>
             {/*<QueueAnim delay={1500}>*/}
-                <Button key="addFormBtn" title="New task" type="primary" onClick={showModal} style={props.alignRight ? {float: 'right', marginBottom: 24} : null}>
+                <Button key="addFormBtn" title="New task" type="primary" onClick={showModal}>
                     <PlusOutlined /> New task
                 </Button>
             {/*</QueueAnim>*/}

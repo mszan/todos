@@ -16,6 +16,7 @@ import {Link} from "react-router-dom";
 import EditForm from "./EditForm";
 import QueueAnim from "rc-queue-anim";
 import Animate from 'rc-animate';
+import emptyImg from "./empty.svg";
 
 
 
@@ -25,6 +26,11 @@ export class Active extends React.Component {
         tasksFetched: false,
         editForm: {
             task: null,
+        },
+        animations: {
+            emptyTasks: {
+                delay: 0
+            }
         }
     }
 
@@ -33,18 +39,23 @@ export class Active extends React.Component {
     }
 
     handleTasksRefresh = () => {
-        this.getTasks(res => {
+        this.fetchTasks(res => {
             this.setState({
                 tasks: res.results,
             });
         });
     }
 
-    getTasks = () => {
+    fetchTasks = () => {
         axios.get('http://localhost:5000/api/tasks/?active=1', {headers: authHeader()})
             .then(response => {
                 this.setState({
                     tasks: response.data,
+                    animations: {
+                        emptyTasks: {
+                            delay: 600
+                        }
+                    },
                     tasksFetched: true
                 })
             })
@@ -102,110 +113,120 @@ export class Active extends React.Component {
 
     render() {
         return (
-            this.state.tasksFetched && this.state.tasks.length > 0 ?
-                <React.Fragment>
-                    <QueueAnim type="scaleBig">
-                        <div key="addFormWrapper"> {/*Div need to be here due to animation requirements.*/}
-                            <AddForm key="addForm" handleTasksRefresh={this.handleTasksRefresh} alignRight/>
-                        </div>
-                    </QueueAnim>
-                    <QueueAnim>
-                        <Divider key="dividerAddForm"/>
-                    </QueueAnim>
-                    <EditForm
-                        key="editForm"
-                        task={this.state.editForm.task}
-                        handleTaskClear={() => this.setState({editForm: {task: null}})}
-                        handleTasksRefresh={this.handleTasksRefresh}
-                    />
-                    <List
-                        key="activeList"
-                        locale={{
-                            emptyText: null
-                        }}
-                        itemLayout="horizontal"
-                    >
-                        <QueueAnim type="top">
-                            {this.state.tasks.map(task =>
-                                <List.Item
-                                    key={task.id}
-                                    extra={
-                                        <React.Fragment>
-                                            {task.dueDate ?
-                                                <React.Fragment>
-                                                    <Text type="secondary" title="Due date"
-                                                          style={moment(task.dueDate).isAfter(moment()) ? {color: "#bfc0c4"} : {color: "#e52807"}}>
-                                                        <ClockCircleOutlined
-                                                            style={{marginLeft: 10}}/> {moment(task.dueDate).format('DD MMM YYYY HH:mm')}
-                                                    </Text>
-                                                    <Divider type="vertical"/>
-                                                </React.Fragment>
-                                                : null}
-                                            <Link to="#" title="Complete" onClick={() => this.handleTaskComplete(task)}>
-                                                <CheckOutlined style={{marginRight: 10}}/>
-                                            </Link>
-                                            <Link to="#" title="Edit" onClick={() => {
-                                                this.setState({
-                                                    editForm: {
-                                                        visible: true,
-                                                        task: task
-                                                    }
-                                                })
-                                            }}
-                                            ><EditOutlined style={{marginRight: 10}}/></Link>
-                                            <Popconfirm
-                                                title="Delete task?"
-                                                onConfirm={() => this.confirmTaskDelete(task)}
-                                                okText={<CheckOutlined/>}
-                                                cancelText={<CloseOutlined/>}
-                                                placement="left"
+            <Row>
+                {this.state.tasksFetched && this.state.tasks.length > 0 ?
+                    <QueueAnim component={Col} componentProps={{span: 24}} type={["scaleBig", "scaleY"]} delay={[450, 0]}>
+                        <Row key="addForm" justify="end">
+                            <Col>
+                                <AddForm key="addForm" handleTasksRefresh={this.handleTasksRefresh} alignRight/>
+                            </Col>
+                        </Row>
+                        <Row key="tasks" justify="end">
+                            <Col span={24}>
+                                <Divider/>
+                                <EditForm
+                                    key="editForm"
+                                    task={this.state.editForm.task}
+                                    handleTaskClear={() => this.setState({editForm: {task: null}})}
+                                    handleTasksRefresh={this.handleTasksRefresh}
+                                />
+                                <List
+                                    key="activeList"
+                                    locale={{
+                                        emptyText: null
+                                    }}
+                                    itemLayout="horizontal"
+                                >
+                                    <QueueAnim type="top">
+                                        {this.state.tasks.map(task =>
+                                            <List.Item
+                                                key={task.id}
+                                                extra={
+                                                    <React.Fragment>
+                                                        {task.dueDate ?
+                                                            <React.Fragment>
+                                                                <Text type="secondary" title="Due date"
+                                                                      style={moment(task.dueDate).isAfter(moment()) ? {color: "#bfc0c4"} : {color: "#e52807"}}>
+                                                                    <ClockCircleOutlined
+                                                                        style={{marginLeft: 10}}/> {moment(task.dueDate).format('DD MMM YYYY HH:mm')}
+                                                                </Text>
+                                                                <Divider type="vertical"/>
+                                                            </React.Fragment>
+                                                            : null}
+                                                        <Link to="#" title="Complete" onClick={() => this.handleTaskComplete(task)}>
+                                                            <CheckOutlined style={{marginRight: 10}}/>
+                                                        </Link>
+                                                        <Link to="#" title="Edit" onClick={() => {
+                                                            this.setState({
+                                                                editForm: {
+                                                                    visible: true,
+                                                                    task: task
+                                                                }
+                                                            })
+                                                        }}
+                                                        ><EditOutlined style={{marginRight: 10}}/></Link>
+                                                        <Popconfirm
+                                                            title="Delete task?"
+                                                            onConfirm={() => this.confirmTaskDelete(task)}
+                                                            okText={<CheckOutlined/>}
+                                                            cancelText={<CloseOutlined/>}
+                                                            placement="left"
+                                                        >
+                                                            <Link to="#" title="Delete"><DeleteOutlined/></Link>
+                                                        </Popconfirm>
+                                                    </React.Fragment>
+                                                }
                                             >
-                                                <Link to="#" title="Delete"><DeleteOutlined/></Link>
-                                            </Popconfirm>
-                                        </React.Fragment>
-                                    }
-                                >
-                                    <List.Item.Meta
-                                        title={
-                                            <React.Fragment>
-                                                {task.priority === 1 ?
-                                                    null :
-                                                    task.priority === 2 ?
-                                                        <ExclamationOutlined style={{color: "#e52807"}}/> :
-                                                        <ArrowDownOutlined style={{color: "#0090ff"}}/>}
-                                                {task.title}
-                                            </React.Fragment>
-                                        }
-                                        description={task.description}
-                                    />
-                                </List.Item>
-                            )}
-                        </QueueAnim>
-                    </List>
-                </React.Fragment> :
-                <Animate exclusive={true} transitionName="fade" transitionAppear>
+                                                <List.Item.Meta
+                                                    title={
+                                                        <React.Fragment>
+                                                            {task.priority === 1 ?
+                                                                null :
+                                                                task.priority === 2 ?
+                                                                    <ExclamationOutlined style={{color: "#e52807"}}/> :
+                                                                    <ArrowDownOutlined style={{color: "#0090ff"}}/>}
+                                                            {task.title}
+                                                        </React.Fragment>
+                                                    }
+                                                    description={task.description}
+                                                />
+                                            </List.Item>
+                                        )}
+                                    </QueueAnim>
+                                </List>
+                            </Col>
+                        </Row>
+                    </QueueAnim>
+                    :
+                    <QueueAnim component={Col} componentProps={{span: 24}} type="scaleY" delay={[this.state.animations.emptyTasks.delay, 0]}>
+                        <Empty
+                            key="emptyTasks"
+                            image={
+                                this.state.tasksFetched && this.state.tasks.length <= 0 ?
+                                    emptyImg :
+                                    <LoadingOutlined style={{fontSize: 24}} spin/>
+                            }
+                            imageStyle={{height: 60}}
+                            description={<Text type="secondary">{
+                                this.state.tasksFetched && this.state.tasks.length <= 0 ?
+                                    "You don't have any active tasks. Want to create one?" :
+                                    "Fetching tasks..."
+                            }</Text>}
+                        >
 
-                    <Row justify="center">
-                        <Col>
-                            {this.state.tasksFetched && this.state.tasks.length <= 0 ?
-                                <Empty
-                                    key="emptyNoActiveTasks"
-                                    image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-                                    imageStyle={{height: 60}}
-                                    description={<span>You don't have any active tasks. Want to create one?</span>}
-                                >
-                                    <AddForm handleTasksRefresh={this.handleTasksRefresh}/>
-                                </Empty> :
-                                <Empty
-                                    key="emptyFetchingTasks"
-                                    image={<LoadingOutlined style={{fontSize: 24}} spin/>}
-                                    imageStyle={{height: 60}}
-                                    description={<span>Fetching tasks...</span>}
-                                >
-                                </Empty>}
-                        </Col>
-                    </Row>
-                </Animate>
+                            {this.state.tasksFetched && this.state.tasks.length ?
+                                null :
+                                <QueueAnim type="scaleY" delay={400}>
+                                    <div key="addFormNoTasks">
+                                        <AddForm key="addForm" handleTasksRefresh={this.handleTasksRefresh}/>
+                                    </div>
+                                </QueueAnim>
+
+                            }
+
+                        </Empty>
+                    </QueueAnim>}
+            </Row>
         );
     }
 }
