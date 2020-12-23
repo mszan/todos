@@ -1,13 +1,14 @@
 import React from 'react';
 import axios from "axios";
 import moment from "moment"
-import {Badge, Col, Divider, Empty, List, notification, Popconfirm, Radio, Row, Spin, Tooltip} from "antd";
+import {Badge, Col, Divider, Empty, List, notification, Popconfirm, Row, Tooltip} from "antd";
 import authHeader from "../../services/auth-header";
 import {
-    ArrowDownOutlined,
-    CheckOutlined, ClockCircleOutlined,
+    CheckOutlined,
+    ClockCircleOutlined,
     CloseOutlined,
-    DeleteOutlined, EditOutlined, ExclamationOutlined,
+    DeleteOutlined,
+    EditOutlined,
     LoadingOutlined,
 } from "@ant-design/icons";
 import AddForm from "./AddForm";
@@ -15,9 +16,7 @@ import Text from "antd/es/typography/Text";
 import {Link} from "react-router-dom";
 import EditForm from "./EditForm";
 import QueueAnim from "rc-queue-anim";
-import Animate from 'rc-animate';
 import emptyImg from "./empty.svg";
-
 
 
 export class Active extends React.Component {
@@ -33,6 +32,11 @@ export class Active extends React.Component {
 
         editForm: {
             task: null,
+        },
+
+        infiniteScroll: {
+            loading: false,
+            hasMore: true
         }
     }
 
@@ -131,7 +135,7 @@ export class Active extends React.Component {
                                     }}
                                     itemLayout="horizontal"
                                 >
-                                    <QueueAnim type="top">
+                                    <QueueAnim type="scaleX" interval={50}>
                                         {this.state.tasks.map(task =>
                                             <List.Item
                                                 key={task.id}

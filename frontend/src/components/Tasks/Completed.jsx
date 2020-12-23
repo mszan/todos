@@ -4,19 +4,16 @@ import moment from "moment"
 import {Badge, Col, Divider, Empty, List, notification, Popconfirm, Row, Statistic, Tooltip} from "antd";
 import authHeader from "../../services/auth-header";
 import {
-    ArrowDownOutlined,
     CheckOutlined,
     ClockCircleOutlined,
     CloseOutlined,
     DeleteOutlined,
     EditOutlined,
-    ExclamationOutlined,
     LoadingOutlined,
     UndoOutlined,
 } from "@ant-design/icons";
 import Text from "antd/es/typography/Text";
 import {Link} from "react-router-dom";
-import Animate from "rc-animate";
 import QueueAnim from "rc-queue-anim";
 import emptyImg from "./empty.svg"
 import EditForm from "./EditForm";
@@ -209,7 +206,7 @@ export class Completed extends React.Component {
                                     }}
                                     itemLayout="horizontal"
                                 >
-                                    <QueueAnim type="top">
+                                    <QueueAnim type="scaleX" interval={50}>
                                         {this.state.tasks.map(task =>
                                             <List.Item
                                                 key={task.id}
