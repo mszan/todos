@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from "axios";
 import moment from "moment"
-import {Col, Divider, Empty, List, notification, Popconfirm, Row, Statistic} from "antd";
+import {Badge, Col, Divider, Empty, List, notification, Popconfirm, Row, Statistic, Tooltip} from "antd";
 import authHeader from "../../services/auth-header";
 import {
     ArrowDownOutlined,
@@ -19,25 +19,30 @@ import {Link} from "react-router-dom";
 import Animate from "rc-animate";
 import QueueAnim from "rc-queue-anim";
 import emptyImg from "./empty.svg"
+import EditForm from "./EditForm";
 
 
 export class Completed extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            animations: {
+                emptyTasks: {
+                    delay: 0
+                }
+            },
+
             tasks: [],
+            tasksFetched: false,
             tasksStats: {
                 completedOnTime: "",
                 completedLast7Days: "",
                 completedLast30Days: ""
             },
-            tasksFetched: false,
-            animations: {
-                emptyTasks: {
-                    delay: 0
-                }
-            }
 
+            editForm: {
+                task: null,
+            }
         }
         this.getTasksStats = this.getTasksStats.bind(this)
     }
@@ -98,19 +103,6 @@ export class Completed extends React.Component {
                 completedLast30Days: resultLast30Days
             }
         })
-    }
-
-    // Take list of tasks and days and return number of tasks completed in period of given days
-    getCompletedLastDays = (tasks, days) => {
-        let result = 0
-        tasks.forEach((item, index) => {
-            for (const [key, val] of Object.entries(item)) {
-                if (key === "completeDate" && val) {
-                    if (moment(val).isAfter()) result += 1
-                }
-            }
-        })
-        return result
     }
 
     confirmTaskDelete = task => {
@@ -199,6 +191,12 @@ export class Completed extends React.Component {
                         </Row>
                         <Row key="taskList" justify="center">
                             <Col span={24}>
+                                <EditForm
+                                    key="editForm"
+                                    task={this.state.editForm.task}
+                                    handleTaskClear={() => this.setState({editForm: {task: null}})}
+                                    handleTasksRefresh={this.fetchTasks}
+                                />
                                 <Divider />
                                 <List
                                     locale={{
@@ -235,7 +233,13 @@ export class Completed extends React.Component {
                                                         <Link href="#" title="Set active"
                                                               onClick={() => this.handleTaskCompleteUndo(task)}><UndoOutlined
                                                             style={{marginRight: 10}}/></Link>
-                                                        <Link href="#" title="Edit" onClick={() => {
+                                                        <Link to="#" title="Edit" onClick={() => {
+                                                            this.setState({
+                                                                editForm: {
+                                                                    visible: true,
+                                                                    task: task
+                                                                }
+                                                            })
                                                         }}><EditOutlined style={{marginRight: 10}}/></Link>
                                                         <Popconfirm
                                                             title="Delete task?"
@@ -255,8 +259,13 @@ export class Completed extends React.Component {
                                                             {task.priority === 1 ?
                                                                 null :
                                                                 task.priority === 2 ?
-                                                                    <ExclamationOutlined style={{color: "#e52807"}}/> :
-                                                                    <ArrowDownOutlined style={{color: "#0090ff"}}/>}
+                                                                    <Tooltip placement="right" title="High priority">
+                                                                        <Badge color="red"/>
+                                                                    </Tooltip>
+                                                                    :
+                                                                    <Tooltip placement="right" title="Low priority">
+                                                                        <Badge color="green"/>
+                                                                    </Tooltip>}
                                                             {task.title}
                                                         </React.Fragment>
                                                     }

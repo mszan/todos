@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from "axios";
 import moment from "moment"
-import {Col, Divider, Empty, List, notification, Popconfirm, Radio, Row, Spin} from "antd";
+import {Badge, Col, Divider, Empty, List, notification, Popconfirm, Radio, Row, Spin, Tooltip} from "antd";
 import authHeader from "../../services/auth-header";
 import {
     ArrowDownOutlined,
@@ -22,28 +22,22 @@ import emptyImg from "./empty.svg";
 
 export class Active extends React.Component {
     state = {
-        tasks: [],
-        tasksFetched: false,
-        editForm: {
-            task: null,
-        },
         animations: {
             emptyTasks: {
                 delay: 0
             }
+        },
+
+        tasks: [],
+        tasksFetched: false,
+
+        editForm: {
+            task: null,
         }
     }
 
     componentDidMount() {
-        this.handleTasksRefresh()
-    }
-
-    handleTasksRefresh = () => {
-        this.fetchTasks(res => {
-            this.setState({
-                tasks: res.results,
-            });
-        });
+        this.fetchTasks()
     }
 
     fetchTasks = () => {
@@ -118,7 +112,7 @@ export class Active extends React.Component {
                     <QueueAnim component={Col} componentProps={{span: 24}} type={["scaleBig", "scaleY"]} delay={[450, 0]}>
                         <Row key="addForm" justify="end">
                             <Col>
-                                <AddForm key="addForm" handleTasksRefresh={this.handleTasksRefresh} alignRight/>
+                                <AddForm key="addForm" handleTasksRefresh={this.fetchTasks} alignRight/>
                             </Col>
                         </Row>
                         <Row key="tasks" justify="end">
@@ -128,7 +122,7 @@ export class Active extends React.Component {
                                     key="editForm"
                                     task={this.state.editForm.task}
                                     handleTaskClear={() => this.setState({editForm: {task: null}})}
-                                    handleTasksRefresh={this.handleTasksRefresh}
+                                    handleTasksRefresh={this.fetchTasks}
                                 />
                                 <List
                                     key="activeList"
@@ -183,8 +177,13 @@ export class Active extends React.Component {
                                                             {task.priority === 1 ?
                                                                 null :
                                                                 task.priority === 2 ?
-                                                                    <ExclamationOutlined style={{color: "#e52807"}}/> :
-                                                                    <ArrowDownOutlined style={{color: "#0090ff"}}/>}
+                                                                    <Tooltip placement="right" title="High priority">
+                                                                        <Badge color="red"/>
+                                                                    </Tooltip>
+                                                                    :
+                                                                    <Tooltip placement="right" title="Low priority">
+                                                                        <Badge color="green"/>
+                                                                    </Tooltip>}
                                                             {task.title}
                                                         </React.Fragment>
                                                     }
@@ -213,17 +212,14 @@ export class Active extends React.Component {
                                     "Fetching tasks..."
                             }</Text>}
                         >
-
                             {this.state.tasksFetched && this.state.tasks.length ?
                                 null :
                                 <QueueAnim type="scaleY" delay={400}>
                                     <div key="addFormNoTasks">
-                                        <AddForm key="addForm" handleTasksRefresh={this.handleTasksRefresh}/>
+                                        <AddForm key="addForm" handleTasksRefresh={this.fetchTasks}/>
                                     </div>
                                 </QueueAnim>
-
                             }
-
                         </Empty>
                     </QueueAnim>}
             </Row>

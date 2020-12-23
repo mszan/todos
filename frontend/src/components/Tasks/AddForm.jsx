@@ -1,4 +1,4 @@
-import {Button, DatePicker, Form, Input, Modal, notification, Radio, Tooltip} from 'antd';
+import {Badge, Button, DatePicker, Form, Input, Modal, notification, Radio, Tooltip} from 'antd';
 import {ArrowDownOutlined, ExclamationOutlined, PlusOutlined} from "@ant-design/icons";
 import React from "react";
 import axios from "axios";
@@ -110,18 +110,16 @@ export default function AddForm(props) {
                         tooltip="DETAILS HERE"
                     >
                         <Radio.Group defaultValue="1" buttonStyle="solid" style={{width: "100%", textAlign: "center"}}>
-                            <Radio.Button style={{width: "33.3%"}} value="2"><ExclamationOutlined style={{color: "#e52807"}}/> High</Radio.Button>
+                            <Radio.Button style={{width: "33.3%"}} value="2"><Badge color="red"/>High</Radio.Button>
                             <Radio.Button style={{width: "33.3%"}} value="1">Normal</Radio.Button>
-                            <Radio.Button style={{width: "33.3%"}} value="3"><ArrowDownOutlined style={{color: "#46cb38"}}/> Low</Radio.Button>
+                            <Radio.Button style={{width: "33.3%"}} value="3"><Badge color="green"/>Low</Radio.Button>
                         </Radio.Group>
                     </Form.Item>
                 </Form>
             </Modal>
-            {/*<QueueAnim delay={1500}>*/}
-                <Button key="addFormBtn" title="New task" type="primary" onClick={showModal}>
-                    <PlusOutlined /> New task
-                </Button>
-            {/*</QueueAnim>*/}
+            <Button key="addFormBtn" title="New task" type="primary" onClick={showModal}>
+                <PlusOutlined /> New task
+            </Button>
         </>
     );
 };

@@ -1,4 +1,4 @@
-import {Button, DatePicker, Form, Input, Modal, notification, Radio} from 'antd';
+import {Badge, Button, DatePicker, Form, Input, Modal, notification, Radio} from 'antd';
 import {ArrowDownOutlined, ExclamationOutlined, PlusOutlined} from "@ant-design/icons";
 import React from "react";
 import moment from "moment";
@@ -132,9 +132,9 @@ export default function EditForm(props) {
                         tooltip="DETAILS HERE"
                     >
                         <Radio.Group buttonStyle="solid" style={{width: "100%", textAlign: "center"}}>
-                            <Radio.Button style={{width: "33.3%"}} value="2"><ExclamationOutlined style={{color: "#e52807"}}/> High</Radio.Button>
+                            <Radio.Button style={{width: "33.3%"}} value="2"><Badge color="red"/>High</Radio.Button>
                             <Radio.Button style={{width: "33.3%"}} value="1">Normal</Radio.Button>
-                            <Radio.Button style={{width: "33.3%"}} value="3"><ArrowDownOutlined style={{color: "#46cb38"}}/> Low</Radio.Button>
+                            <Radio.Button style={{width: "33.3%"}} value="3"><Badge color="green"/>Low</Radio.Button>
                         </Radio.Group>
                     </Form.Item>
                 </Form>
