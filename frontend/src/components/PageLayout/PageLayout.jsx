@@ -16,20 +16,25 @@ import {HeaderBtnRegister} from "../Registration/HeaderBtnRegister";
 import {Link, NavLink} from "react-router-dom";
 import Animate from "rc-animate";
 import Text from "antd/es/typography/Text";
+
 const { Header, Sider, Content } = Layout;
 
 export class PageLayout extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            collapsed: this.isSidebarCollapsed(),
+            loginModalVisible: false,
+            registerModalVisible: false,
+        }
+    }
+
     isSidebarCollapsed = () => {
         try {
             return JSON.parse(localStorage.getItem("sidebarCollapsed"))
         } catch {
             return false
         }
-    }
-
-    state = {
-        collapsed: this.isSidebarCollapsed(),
-        username: localStorage.getItem("username")
     }
 
     toggle = () => {
@@ -39,8 +44,15 @@ export class PageLayout extends React.Component {
         localStorage.setItem("sidebarCollapsed", String(!this.state.collapsed))
     };
 
+    handleLoginRegisterModalSwitch = () => {
+        this.setState({
+            loginModalVisible: !this.state.loginModalVisible,
+            registerModalVisible: !this.state.registerModalVisible,
+        })
+    }
+
     render() {
-        const {username} = this.state
+        const username = localStorage.getItem("username")
 
         return (
             <Layout>
@@ -95,8 +107,16 @@ export class PageLayout extends React.Component {
                                     <Text>{this.props.title}</Text>
                                 </Col>
                                 <Col style={{marginRight: "1rem"}}>
-                                    <HeaderBtnRegister/>
-                                    <HeaderBtnLogin/>
+                                    <HeaderBtnRegister
+                                        visible={this.state.registerModalVisible}
+                                        handleLoginRegisterModalSwitch={this.handleLoginRegisterModalSwitch}
+                                        handleVisible={() => this.setState({registerModalVisible: !this.state.registerModalVisible})}
+                                    />
+                                    <HeaderBtnLogin
+                                        visible={this.state.loginModalVisible}
+                                        handleLoginRegisterModalSwitch={this.handleLoginRegisterModalSwitch}
+                                        handleVisible={() => this.setState({loginModalVisible: !this.state.loginModalVisible})}
+                                    />
                                 </Col>
                             </Row>
                         </Animate>

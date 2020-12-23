@@ -1,40 +1,30 @@
 import React from "react";
-import {Button, Tooltip} from "antd";
+import {Button, Spin, Tooltip} from "antd";
 import Modal from "antd/es/modal/Modal";
 import {LoginOutlined, LogoutOutlined} from "@ant-design/icons";
-import {LoginForm} from "./LoginForm";
 import AuthService from "../../services/auth.service";
 import {Redirect} from "react-router";
+
+const LoginForm = React.lazy(() => import('./LoginForm'));
 
 
 export class HeaderBtnLogin extends React.Component {
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
-            username: localStorage.getItem("username"),
             redirect: null
         }
-        this.handleLogout = this.handleLogout.bind(this);
+        this.handleLogout = this.handleLogout.bind(this)
     }
 
-    showModal = () => {
-        this.setState({
-            modalVisible: true,
-        });
-    };
-
-    handleCancel = () => {
-        this.setState({ modalVisible: false });
-    };
-
     handleLogout = () => {
-        AuthService.logout();
+        AuthService.logout()
         this.setState({redirect: true})
     }
 
-
     render() {
-        const { username, modalVisible } = this.state;
+        const username = localStorage.getItem("username")
+
         if (username) {
             return (
                 <React.Fragment>
@@ -44,7 +34,7 @@ export class HeaderBtnLogin extends React.Component {
                         </Button>
                     </Tooltip>
                 </React.Fragment>
-            );
+            )
         }
 
         if (this.state.redirect) {
@@ -53,18 +43,20 @@ export class HeaderBtnLogin extends React.Component {
 
         return (
             <React.Fragment>
-                <Button type="primary" onClick={this.showModal}>
+                <Button type="primary" onClick={this.props.handleVisible}>
                     <LoginOutlined />Login
                 </Button>
                 <Modal
                     title="Login form"
-                    visible={modalVisible}
-                    onCancel={this.handleCancel}
+                    visible={this.props.visible}
+                    onCancel={this.props.handleVisible}
                     footer={null}
                 >
-                    <LoginForm/>
+                    <React.Suspense fallback={<Spin />}>
+                        <LoginForm handleLoginRegisterModalSwitch={this.props.handleLoginRegisterModalSwitch} />
+                    </React.Suspense>
                 </Modal>
             </React.Fragment>
-        );
+        )
     }
 }

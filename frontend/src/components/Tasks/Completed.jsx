@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from "axios";
 import moment from "moment"
-import {Badge, Col, Divider, Empty, List, notification, Popconfirm, Row, Statistic, Tooltip} from "antd";
+import {Badge, Col, Divider, Empty, List, notification, Popconfirm, Row, Spin, Statistic, Tooltip} from "antd";
 import authHeader from "../../services/auth-header";
 import {
     CheckOutlined,
@@ -16,7 +16,8 @@ import Text from "antd/es/typography/Text";
 import {Link} from "react-router-dom";
 import QueueAnim from "rc-queue-anim";
 import emptyImg from "./empty.svg"
-import EditForm from "./EditForm";
+
+const EditForm = React.lazy(() => import('./EditForm'));
 
 
 export class Completed extends React.Component {
@@ -188,12 +189,14 @@ export class Completed extends React.Component {
                         </Row>
                         <Row key="taskList" justify="center">
                             <Col span={24}>
-                                <EditForm
-                                    key="editForm"
-                                    task={this.state.editForm.task}
-                                    handleTaskClear={() => this.setState({editForm: {task: null}})}
-                                    handleTasksRefresh={this.fetchTasks}
-                                />
+                                <React.Suspense fallback={<Spin />}>
+                                    <EditForm
+                                        key="editForm"
+                                        task={this.state.editForm.task}
+                                        handleTaskClear={() => this.setState({editForm: {task: null}})}
+                                        handleTasksRefresh={this.fetchTasks}
+                                    />
+                                </React.Suspense>
                                 <Divider />
                                 <List
                                     locale={{
@@ -205,8 +208,9 @@ export class Completed extends React.Component {
                                             />
                                     }}
                                     itemLayout="horizontal"
+                                    dataSource={this.state.tasks}
                                 >
-                                    <QueueAnim type="scaleX" interval={50}>
+                                    <QueueAnim type="top" interval={50}>
                                         {this.state.tasks.map(task =>
                                             <List.Item
                                                 key={task.id}
@@ -227,7 +231,7 @@ export class Completed extends React.Component {
                                                         </Text>
                                                         <Divider type="vertical"/>
 
-                                                        <Link href="#" title="Set active"
+                                                        <Link to="#" title="Set active"
                                                               onClick={() => this.handleTaskCompleteUndo(task)}><UndoOutlined
                                                             style={{marginRight: 10}}/></Link>
                                                         <Link to="#" title="Edit" onClick={() => {

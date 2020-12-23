@@ -1,58 +1,36 @@
 import React from "react";
-import {Button, Tooltip} from "antd";
+import {Button, Spin} from "antd";
 import Modal from "antd/es/modal/Modal";
-import {LoginOutlined, LogoutOutlined, UserAddOutlined} from "@ant-design/icons";
-import {LoginForm} from "./LoginForm";
-import AuthService from "../../services/auth.service";
-import {Redirect} from "react-router";
-import {RegisterForm} from "./RegisterForm";
-
+import {UserAddOutlined} from "@ant-design/icons";
+const RegisterForm = React.lazy(() => import('./RegisterForm'));
 
 export class HeaderBtnRegister extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            username: localStorage.getItem("username"),
-            // redirect: null
-        }
+        this.state = {}
     }
 
-    showModal = () => {
-        this.setState({
-            modalVisible: true,
-        });
-    };
-
-    handleCancel = () => {
-        this.setState({ modalVisible: false });
-    };
-
-    // handleLogout = () => {
-    //     AuthService.logout();
-    //     this.setState({redirect: true})
-    // }
-
-
     render() {
-        const { username, modalVisible } = this.state;
+        const username = localStorage.getItem("username")
 
         // If username is set in localStorage hide button
         if (username) return null;
 
         // if (this.state.redirect) return (<Redirect to='/' />)
-
         return (
             <React.Fragment>
-                <Button type="primary" onClick={this.showModal} style={{marginRight: "1rem"}}>
+                <Button type="primary" onClick={this.props.handleVisible} style={{marginRight: "1rem"}}>
                     <UserAddOutlined />Register
                 </Button>
                 <Modal
                     title="Register form"
-                    visible={modalVisible}
-                    onCancel={this.handleCancel}
+                    visible={this.props.visible}
+                    onCancel={this.props.handleVisible}
                     footer={null}
                 >
-                    <RegisterForm />
+                    <React.Suspense fallback={<Spin />}>
+                        <RegisterForm handleLoginRegisterModalSwitch={this.props.handleLoginRegisterModalSwitch} />
+                    </React.Suspense>
                 </Modal>
             </React.Fragment>
         );

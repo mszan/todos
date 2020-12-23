@@ -3,8 +3,9 @@ import {Button, Form, Input} from "antd";
 import {LockOutlined, UserOutlined} from "@ant-design/icons";
 import './LoginForm.css';
 import AuthService from "../../services/auth.service";
+import {Link} from "react-router-dom";
 
-export class LoginForm extends React.Component {
+class LoginForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
@@ -55,23 +56,16 @@ export class LoginForm extends React.Component {
                         placeholder="Password"
                     />
                 </Form.Item>
-                {/*<Form.Item>*/}
-                {/*    <Form.Item name="remember" valuePropName="checked" noStyle>*/}
-                {/*        <Checkbox>Remember me</Checkbox>*/}
-                {/*    </Form.Item>*/}
-
-                {/*    <a className="login-form-forgot" href="">*/}
-                {/*        Forgot password*/}
-                {/*    </a>*/}
-                {/*</Form.Item>*/}
 
                 <Form.Item style={{marginBottom: 0}}>
                     <Button type="primary" htmlType="submit" className="registrationFormBtn">
                         Login
                     </Button>
-                    {/*<div style={{marginTop: '1rem'}}>Don't have an account? <a href="">Register now!</a></div>*/}
+                    <div style={{marginTop: '1rem'}}>Don't have an account? <Link to="#" onClick={this.props.handleLoginRegisterModalSwitch}>Register now!</Link></div>
                 </Form.Item>
             </Form>
         );
     }
 }
+
+export default LoginForm

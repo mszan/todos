@@ -1,14 +1,13 @@
 import React from "react";
-import {Button, Checkbox, Divider, Form, Input, notification} from "antd";
-import {LockOutlined, UserOutlined} from "@ant-design/icons";
+import {Button, Checkbox, Divider, Form, Image, Input, notification} from "antd";
 import AuthService from "../../services/auth.service";
 import {Link} from "react-router-dom";
 import axios from "axios";
 
-export class RegisterForm extends React.Component {
+class RegisterForm extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {}
     }
 
     onFinish = values => {
@@ -155,8 +154,10 @@ export class RegisterForm extends React.Component {
                     </Form.Item>
                 </Form>
                 <Divider />
-                <div style={{marginTop: '1rem', textAlign: "center"}}>Already have an account? <Link href="">Login here!</Link></div>
+                <div style={{marginTop: '1rem', textAlign: "center"}}>Already have an account? <Link to="#" onClick={this.props.handleLoginRegisterModalSwitch}>Login here!</Link></div>
             </React.Fragment>
         );
     }
 }
+
+export default RegisterForm

@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from "axios";
 import moment from "moment"
-import {Badge, Col, Divider, Empty, List, notification, Popconfirm, Row, Tooltip} from "antd";
+import {Badge, Col, Divider, Empty, List, notification, Popconfirm, Row, Spin, Tooltip} from "antd";
 import authHeader from "../../services/auth-header";
 import {
     CheckOutlined,
@@ -14,10 +14,10 @@ import {
 import AddForm from "./AddForm";
 import Text from "antd/es/typography/Text";
 import {Link} from "react-router-dom";
-import EditForm from "./EditForm";
 import QueueAnim from "rc-queue-anim";
 import emptyImg from "./empty.svg";
 
+const EditForm = React.lazy(() => import('./EditForm'));
 
 export class Active extends React.Component {
     state = {
@@ -122,12 +122,14 @@ export class Active extends React.Component {
                         <Row key="tasks" justify="end">
                             <Col span={24}>
                                 <Divider/>
-                                <EditForm
-                                    key="editForm"
-                                    task={this.state.editForm.task}
-                                    handleTaskClear={() => this.setState({editForm: {task: null}})}
-                                    handleTasksRefresh={this.fetchTasks}
-                                />
+                                <React.Suspense fallback={<Spin />}>
+                                    <EditForm
+                                        key="editForm"
+                                        task={this.state.editForm.task}
+                                        handleTaskClear={() => this.setState({editForm: {task: null}})}
+                                        handleTasksRefresh={this.fetchTasks}
+                                    />
+                                </React.Suspense>
                                 <List
                                     key="activeList"
                                     locale={{
@@ -135,7 +137,7 @@ export class Active extends React.Component {
                                     }}
                                     itemLayout="horizontal"
                                 >
-                                    <QueueAnim type="scaleX" interval={50}>
+                                    <QueueAnim type="top" interval={50}>
                                         {this.state.tasks.map(task =>
                                             <List.Item
                                                 key={task.id}
