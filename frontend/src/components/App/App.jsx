@@ -6,6 +6,7 @@ import {Home} from "../Home/Home";
 import {Result} from "antd";
 import {HeaderBtnLogin} from "../Registration/HeaderBtnLogin";
 import {Completed} from "../Tasks/Completed";
+import React from "react";
 
 function App() {
     return (
@@ -13,28 +14,28 @@ function App() {
             <Switch>
                 <RouteWrapper
                     navKey="4"
-                    path="/tasks/completed" exact
+                    path="/tasks/completed"
                     component={Completed}
                     title={"Completed tasks"}
                     loginRequired
                 />
                 <RouteWrapper
                     navKey="3"
-                    path="/tasks" exact
+                    path="/tasks"
                     component={Active}
                     title={"Active tasks"}
                     loginRequired
                 />
                 <RouteWrapper
                     navKey="2"
-                    path="/profile" exact
+                    path="/profile"
                     component={Profile}
                     title={"Profile"}
                     loginRequired
                 />
                 <RouteWrapper
                     navKey="1"
-                    path=""
+                    path="" exact
                     component={Home}
                     title={"Home"}
                 />
@@ -43,9 +44,28 @@ function App() {
     );
 }
 
-function RouteWrapper({component: Component, title: title, loginRequired: loginRequired, navKey: navKey}) {
+
+function RouteWrapper({component: Component, title: title, loginRequired: loginRequired, navKey: navKey}){
     const username = localStorage.getItem("username")
     const accessToken = localStorage.getItem("accessToken")
+
+    const getComponent = () => {
+        if (loginRequired) {
+            if (username && accessToken) {
+                return <Component />
+            } else {
+                return (
+                    <Result
+                        title=""
+                        subTitle="You need to be logged in to view this page."
+                        extra={<HeaderBtnLogin />}
+                    />
+                )
+            }
+        } else {
+            return <Component />
+        }
+    }
 
     return (
         <Route render={(props) =>
@@ -53,15 +73,7 @@ function RouteWrapper({component: Component, title: title, loginRequired: loginR
                 title={username && accessToken ? title : null}
                 navKey={navKey ? navKey : null}
             >
-                {!loginRequired ?
-                    <Component/> : username && accessToken ?
-                        <Component /> :
-                        <Result
-                            title="User not logged in"
-                            subTitle="You need to be logged in to view this page."
-                            extra={<HeaderBtnLogin noStyle/>}
-                        />
-                }
+                {getComponent()}
             </PageLayout>
         }
         />

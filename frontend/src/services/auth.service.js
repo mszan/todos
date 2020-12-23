@@ -1,5 +1,4 @@
 import axios from "axios";
-const API_URL = "http://localhost:5000/api/";
 
 // Refreshes JWT
 axios.interceptors.response.use(response => {
@@ -20,7 +19,7 @@ axios.interceptors.response.use(response => {
         {
             originalReq._retry = true;
             // Get new tokens from server
-            let res = fetch(API_URL + 'token', {
+            let res = fetch(process.env.REACT_APP_API_URL + 'token', {
                 method: 'POST',
                 mode: 'cors',
                 cache: 'no-cache',
@@ -60,7 +59,7 @@ class AuthService {
     login(username, password) {
         return axios
             // Get JWT tokens from server
-            .post(API_URL + "login", {
+            .post(process.env.REACT_APP_API_URL + "login", {
                 username,
                 password
             })

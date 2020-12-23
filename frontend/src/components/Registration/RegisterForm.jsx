@@ -5,9 +5,6 @@ import AuthService from "../../services/auth.service";
 import {Link} from "react-router-dom";
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/";
-
-
 export class RegisterForm extends React.Component {
     constructor(props) {
         super(props);
@@ -16,7 +13,7 @@ export class RegisterForm extends React.Component {
 
     onFinish = values => {
         // Send register data to server
-        axios.post(API_URL + "register", {
+        axios.post(process.env.REACT_APP_API_URL + "register", {
             username: values.username,
             password: values.password,
             email: values.email,

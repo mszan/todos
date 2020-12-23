@@ -12,7 +12,6 @@ export default function AddForm(props) {
     const [confirmLoading, setConfirmLoading] = React.useState(false);
 
     const [form] = Form.useForm();
-    const API_URL = "http://localhost:5000/api/"
 
     const showModal = () => {
         setVisible(true);
@@ -28,7 +27,7 @@ export default function AddForm(props) {
         console.log(values.dueDate)
 
         // Send request to add task
-        axios.post(API_URL + "tasks",{
+        axios.post(process.env.REACT_APP_API_URL + "tasks",{
             title: values.title,
             description: values.description ? values.description : null,
             dueDate: values.dueDate ? values.dueDate.format('YYYY-MM-DD HH:mm:ss') : null,

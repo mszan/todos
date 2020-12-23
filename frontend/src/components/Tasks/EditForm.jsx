@@ -1,16 +1,16 @@
 import {Badge, Button, DatePicker, Form, Input, Modal, notification, Radio} from 'antd';
-import {ArrowDownOutlined, ExclamationOutlined, PlusOutlined} from "@ant-design/icons";
+import {PlusOutlined} from "@ant-design/icons";
 import React from "react";
 import moment from "moment";
 import axios from "axios";
 import authHeader from "../../services/auth-header";
 
 export default function EditForm(props) {
-    const [visible, setVisible] = React.useState(!!props.task);
-    const [form] = Form.useForm();
+    const [visible, setVisible] = React.useState(!!props.task); // Handles visibility of modal with form
+    const [form] = Form.useForm(); // Edit form instance
 
     React.useEffect(() => {
-        // TODO: remove this due to passed task, no need to check
+        // If task is passed, set modal visible
         setVisible(!!props.task)
 
         // If task is passed, set form fields values
@@ -37,8 +37,6 @@ export default function EditForm(props) {
         }
     }
 
-    const API_URL = "http://localhost:5000/api/"
-
     const handleFormFinishOk = values => {
         // Hide modal
         setVisible(false);
@@ -47,7 +45,7 @@ export default function EditForm(props) {
         form.resetFields();
 
         // Send request to add task
-        axios.put(API_URL + `tasks/${props.task.id}`,{
+        axios.put(process.env.REACT_APP_API_URL + `tasks/${props.task.id}`,{
             title: values.title,
             description: values.description ? values.description : null,
             dueDate: values.dueDate ? values.dueDate.format('YYYY-MM-DD HH:mm:ss') : null,
