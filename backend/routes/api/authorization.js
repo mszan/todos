@@ -12,7 +12,7 @@ app.post("/register", async (req, res) => {
         let {username, password, email, firstname, lastname} = req.body
 
         // Check for required data.
-        if (!username || !password || !email) res.json({"msg": "Missing required parameters."})
+        if (!username || !password || !email) res.status(400).send({"msg": "Missing required parameters."})
 
         // Check if firstname is sent, if not set null.
         if (!firstname) firstname = null
@@ -44,7 +44,7 @@ app.post("/login", async (req, res) => {
 
         // Check if query result is not empty.
         // If hashed password is not found (user does not exist), return message.
-        if (hashedPassword[0].length < 1) return res.json({"msg": "User and / or password invalid / missing."})
+        if (hashedPassword[0].length < 1) return res.status(401).send({"msg": "User and / or password invalid / missing."})
 
         // Compare sent password and hashedPassword.
         bcrypt.compare(req.body.password, hashedPassword[0][0]['password'], (err, result) => {
@@ -76,7 +76,7 @@ app.post("/login", async (req, res) => {
                 // Send response with accessToken and refreshToken.
                 res.json({accessToken: accessToken, refreshToken: refreshToken})
             } else {
-                return res.json({"msg": "User and / or password invalid."})
+                return res.status(401).send({"msg": "User and / or password invalid."})
             }
         })
     } catch(err) {
