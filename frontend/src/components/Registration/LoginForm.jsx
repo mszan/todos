@@ -1,35 +1,41 @@
 import React from "react";
-import {Button, Form, Input} from "antd";
-import {LockOutlined, UserOutlined} from "@ant-design/icons";
+import {Button, Form, Input, message, Spin} from "antd";
+import {LoadingOutlined, LockOutlined, UserOutlined} from "@ant-design/icons";
 import './LoginForm.css';
 import AuthService from "../../services/auth.service";
 import {Link} from "react-router-dom";
+import Text from "antd/es/typography/Text";
 
 class LoginForm extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            submitBtnLoading: false
+        };
     }
 
+    loginForm = React.createRef();
+
+    // onFinish login form
     onFinish = values => {
-        AuthService.login(values.username, values.password).then(
-            () => {
-                window.location.reload();
-            },
-            error => {
-                // const resMessage =
-                //     (error.response &&
-                //         error.response.data &&
-                //         error.response.data.message) ||
-                //     error.message ||
-                //     error.toString();
-                //
-                // this.setState({
-                //     loading: false,
-                //     message: resMessage
-                // });
-            }
-        );
+        // Set button loading state
+        this.setState({submitBtnLoading: true})
+
+        // Try to login user
+        AuthService.login(values.username, values.password)
+
+            // If login success, reload window
+            .then(() => window.location.reload())
+
+            // If login failed, display message and set new state for loading button
+            .catch(err => {
+                if (err.response.status === 401) {
+                    console.log(`Login failed - username "${values.username}", code 401`)
+                    message.error("Login failed") // Display an error
+                    this.loginForm.current.resetFields(); // Reset form fields
+                    setTimeout(() => this.setState({submitBtnLoading: false}), 1000) // Set timeout to prevent clicking again quick
+                }
+            })
     };
 
     render() {
@@ -39,6 +45,7 @@ class LoginForm extends React.Component {
                 className="login-form"
                 initialValues={{ remember: true }}
                 onFinish={this.onFinish}
+                ref={this.loginForm}
             >
                 <Form.Item
                     name="username"
@@ -58,7 +65,12 @@ class LoginForm extends React.Component {
                 </Form.Item>
 
                 <Form.Item style={{marginBottom: 0}}>
-                    <Button type="primary" htmlType="submit" className="registrationFormBtn">
+                    <Button
+                        type="primary"
+                        htmlType="submit"
+                        className="registrationFormBtn"
+                        loading={!!this.state.submitBtnLoading}
+                    >
                         Login
                     </Button>
                     <div style={{marginTop: '1rem'}}>Don't have an account? <Link to="#" onClick={this.props.handleLoginRegisterModalSwitch}>Register now!</Link></div>

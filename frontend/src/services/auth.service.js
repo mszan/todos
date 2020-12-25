@@ -1,4 +1,7 @@
 import axios from "axios";
+import {message} from "antd";
+
+// TODO: handle false login 401 response
 
 // Refreshes JWT
 axios.interceptors.response.use(response => {
@@ -8,6 +11,7 @@ axios.interceptors.response.use(response => {
     // Response bad
     return new Promise((resolve, reject) => {
         const originalReq = err.config;
+
         // If response is not present
         if (!err.response) {
             console.log(err.config)
@@ -15,8 +19,7 @@ axios.interceptors.response.use(response => {
         }
 
         // If response returned 403
-        if ( err.response.status === 403 && err.config )
-        {
+        if (err.response.status === 403 && err.config) {
             originalReq._retry = true;
             // Get new tokens from server
             let res = fetch(process.env.REACT_APP_API_URL + 'token', {
@@ -48,6 +51,13 @@ axios.interceptors.response.use(response => {
             ;
             resolve(res);
         }
+
+        // If response returned 403
+        if (err.response.status === 401) {
+            throw Promise.reject(err);
+        }
+
+        // Else reject
         return Promise.reject(err);
     });
 });
@@ -57,16 +67,16 @@ class AuthService {
 
     // Logins user
     login(username, password) {
-        return axios
+        return (
+            axios.post(process.env.REACT_APP_API_URL + "login", {
             // Get JWT tokens from server
-            .post(process.env.REACT_APP_API_URL + "login", {
                 username,
                 password
             })
 
             // Set returned data in localStorage
             .then(response => {
-                if (response.data.accessToken) {
+                if (response.data.accessToken && response.data.refreshToken) {
                     let data = response.data
                     localStorage.setItem("username", username);
                     localStorage.setItem("accessToken", data["accessToken"]);
@@ -74,7 +84,17 @@ class AuthService {
                 }
                 return response.data;
             })
-            // .catch(TODO: wrong error handle)
+
+            .catch(err => {
+                return err
+            })
+        )
+
+            // // .catch(TODO: wrong error handle)
+            // .catch(err => {
+            //     console.log("a", err)
+            //     return err
+            // })
     }
 
     // Logout user
