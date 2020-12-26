@@ -1,7 +1,6 @@
 const express = require('express')
 const app = express()
 const pool = require("../../db")
-// const moment = require('moment')
 
 // Gets all active tasks related to authenticated user.
 app.get("/", (req, res) => {
@@ -10,14 +9,28 @@ app.get("/", (req, res) => {
         if (res.locals.tasksPrivileges['getTasks'] === 0) {
             return res.sendStatus(403)
         }
+        // Get data from request parameters.
+        const { orderField, active } = req.query
+        let { orderType } = req.query
+
+        // If orderField is set, check orderType value. If its not "ASC" or "DESC
+        if (orderField) {
+            if (!(orderType === "ASC" || orderType === "DESC")) {
+                return res.status(400).json({"msg": "Missing / wrong 'orderType' value. Use 'ASC' or 'DESC'."})
+            }
+        }
 
         // Query for tasks.
         let query = `SELECT id, active, title, description, priority, addDate, dueDate, completeDate FROM tasks WHERE users__id = ${res.locals.userId}`
-        req.query.active ? query += ` AND active = ${req.query.active}` : null
-        query += ` ORDER BY dueDate DESC`
+        active ? query += ` AND active = ${active}` : null // Get active tasks if 'active' parameter is not null
+        orderField ? query += ` ORDER BY ${orderField} ${orderType}` : query += ` ORDER BY -dueDate DESC` // Order, more here: https://stackoverflow.com/questions/2051602/mysql-orderby-a-number-nulls-last
         pool.query(query)
             .then(queryRes => {
                 res.json(queryRes[0])
+            })
+            .catch(err => {
+                console.log(err)
+                res.sendStatus(400)
             })
     }
     catch (err) {
