@@ -1,0 +1,22 @@
+.taskListItem {
+    transition: border 100ms ease-in-out;
+    border: 1px solid rgba(0,0,0,0);
+}
+
+.taskListItem:hover {
+    border-top: 1px solid rgba(0, 0, 0, 0.06) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important
+}
+
+.taskListItem:hover .taskListBtns {
+    opacity: .5;
+}
+
+.taskListBtns {
+    opacity: 0;
+    transition: opacity 100ms ease-in-out;
+}
+
+.taskListBtns:hover {
+    opacity: 1!important;
+}

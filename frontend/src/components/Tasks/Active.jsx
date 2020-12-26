@@ -10,12 +10,14 @@ import {
     DeleteOutlined,
     EditOutlined,
     LoadingOutlined,
+    QuestionCircleOutlined,
 } from "@ant-design/icons";
 import AddForm from "./AddForm";
 import Text from "antd/es/typography/Text";
 import {Link} from "react-router-dom";
 import QueueAnim from "rc-queue-anim";
 import emptyImg from "./empty.svg";
+import "./tasks.css"
 
 const EditForm = React.lazy(() => import('./EditForm'));
 
@@ -109,6 +111,17 @@ export class Active extends React.Component {
             })
     }
 
+    // Get display color for dueDate depending on remaining time
+    getDueDateStyleColor = dueDate => {
+        if (moment(dueDate).isAfter(moment())) {
+            if (moment(dueDate).isAfter(moment().add(1, "day"))) {
+                return "#bfc0c4"
+            }
+            return "#ffcc00"
+        }
+        return "#e52807"
+    }
+
     render() {
         return (
             <Row>
@@ -132,70 +145,75 @@ export class Active extends React.Component {
                                 </React.Suspense>
                                 <List
                                     key="activeList"
-                                    locale={{
-                                        emptyText: null
-                                    }}
+                                    locale={{ emptyText: null }}
                                     itemLayout="horizontal"
                                 >
                                     <QueueAnim type="top" interval={50}>
                                         {this.state.tasks.map(task =>
-                                            <List.Item
-                                                key={task.id}
-                                                extra={
-                                                    <React.Fragment>
-                                                        {task.dueDate ?
-                                                            <React.Fragment>
-                                                                <Text type="secondary" title="Due date"
-                                                                      style={moment(task.dueDate).isAfter(moment()) ? {color: "#bfc0c4"} : {color: "#e52807"}}>
-                                                                    <ClockCircleOutlined
-                                                                        style={{marginLeft: 10}}/> {moment(task.dueDate).format('DD MMM YYYY HH:mm')}
-                                                                </Text>
-                                                                <Divider type="vertical"/>
-                                                            </React.Fragment>
-                                                            : null}
-                                                        <Link to="#" title="Complete" onClick={() => this.handleTaskComplete(task)}>
-                                                            <CheckOutlined style={{marginRight: 10}}/>
-                                                        </Link>
-                                                        <Link to="#" title="Edit" onClick={() => {
-                                                            this.setState({
-                                                                editForm: {
-                                                                    visible: true,
-                                                                    task: task
-                                                                }
-                                                            })
-                                                        }}
-                                                        ><EditOutlined style={{marginRight: 10}}/></Link>
-                                                        <Popconfirm
-                                                            title="Delete task?"
-                                                            onConfirm={() => this.confirmTaskDelete(task)}
-                                                            okText={<CheckOutlined/>}
-                                                            cancelText={<CloseOutlined/>}
-                                                            placement="left"
-                                                        >
-                                                            <Link to="#" title="Delete"><DeleteOutlined/></Link>
-                                                        </Popconfirm>
-                                                    </React.Fragment>
-                                                }
-                                            >
-                                                <List.Item.Meta
-                                                    title={
+                                            <div className="taskListItem" key={task.id}>
+                                                <List.Item
+                                                    extra={
                                                         <React.Fragment>
-                                                            {task.priority === 1 ?
-                                                                null :
-                                                                task.priority === 2 ?
-                                                                    <Tooltip placement="right" title="High priority">
-                                                                        <Badge color="red"/>
-                                                                    </Tooltip>
-                                                                    :
-                                                                    <Tooltip placement="right" title="Low priority">
-                                                                        <Badge color="green"/>
-                                                                    </Tooltip>}
-                                                            {task.title}
+                                                            <div className="taskListBtns">
+                                                                <Link to="#" title="Complete" onClick={() => this.handleTaskComplete(task)}>
+                                                                    <CheckOutlined style={{marginRight: 10, marginLeft: 20}}/>
+                                                                </Link>
+                                                                <Link to="#" title="Edit" onClick={() => {
+                                                                    this.setState({
+                                                                        editForm: {
+                                                                            visible: true,
+                                                                            task: task
+                                                                        }
+                                                                    })
+                                                                }}
+                                                                >
+                                                                    <EditOutlined style={{marginRight: 10}}/>
+                                                                </Link>
+                                                                <Popconfirm
+                                                                    title="This will permanently delete task. Are you sure?"
+                                                                    icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+                                                                    onConfirm={() => this.confirmTaskDelete(task)}
+                                                                    okText={<CheckOutlined/>}
+                                                                    cancelText={<CloseOutlined/>}
+                                                                    placement="left"
+                                                                >
+                                                                    <Link to="#" title="Delete"><DeleteOutlined style={{color: "#ff7373"}}/></Link>
+                                                                </Popconfirm>
+                                                            </div>
                                                         </React.Fragment>
                                                     }
-                                                    description={task.description}
-                                                />
-                                            </List.Item>
+                                                >
+                                                    <List.Item.Meta
+                                                        title={
+                                                            <React.Fragment>
+                                                                {task.priority === 1 ?
+                                                                    null :
+                                                                    task.priority === 2 ?
+                                                                        <Tooltip placement="right" title="Has high priority">
+                                                                            <Badge color="red"/>
+                                                                        </Tooltip>
+                                                                        :
+                                                                        <Tooltip placement="right" title="Has low priority">
+                                                                            <Badge color="green"/>
+                                                                        </Tooltip>}
+                                                                {task.title}
+                                                                {task.dueDate ?
+                                                                    <React.Fragment>
+                                                                        <Divider type="vertical"/>
+                                                                        <Text type="secondary"
+                                                                              title={`Must be completed before ${moment(task.dueDate).format('DD MMMM YYYY HH:mm')}`}
+                                                                              style={{color: this.getDueDateStyleColor(task.dueDate)}}
+                                                                        >
+                                                                            <ClockCircleOutlined/> {moment(task.dueDate).format('DD MMM YYYY HH:mm')}
+                                                                        </Text>
+                                                                    </React.Fragment>
+                                                                    : null}
+                                                            </React.Fragment>
+                                                        }
+                                                        description={task.description}
+                                                    />
+                                                </List.Item>
+                                            </div>
                                         )}
                                     </QueueAnim>
                                 </List>
