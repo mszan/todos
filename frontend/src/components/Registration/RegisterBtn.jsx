@@ -4,7 +4,8 @@ import Modal from "antd/es/modal/Modal";
 import {UserAddOutlined} from "@ant-design/icons";
 const RegisterForm = React.lazy(() => import('./RegisterForm'));
 
-export class HeaderBtnRegister extends React.Component {
+// Register button that opens form
+export class RegisterBtn extends React.Component {
     constructor(props) {
         super(props);
         this.state = {}

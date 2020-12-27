@@ -7,8 +7,8 @@ import {Redirect} from "react-router";
 
 const LoginForm = React.lazy(() => import('./LoginForm'));
 
-
-export class HeaderBtnLogin extends React.Component {
+// Login button that opens form
+export class LoginBtn extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -17,6 +17,7 @@ export class HeaderBtnLogin extends React.Component {
         this.handleLogout = this.handleLogout.bind(this)
     }
 
+    // Logouts user
     handleLogout = () => {
         AuthService.logout()
         this.setState({redirect: true})

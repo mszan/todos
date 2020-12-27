@@ -1,0 +1,11 @@
+.formForgot {
+    float: right;
+}
+
+.ant-col-rtl .formForgot {
+    float: left;
+}
+
+.formBtn {
+    width: 100%;
+}
