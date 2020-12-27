@@ -5,6 +5,8 @@ import moment from "moment";
 import axios from "axios";
 import authHeader from "../../services/auth-header";
 
+
+// Form for editing tasks
 export default function EditForm(props) {
     const [visible, setVisible] = React.useState(!!props.task); // Handles visibility of modal with form
     const [form] = Form.useForm(); // Edit form instance
@@ -17,6 +19,7 @@ export default function EditForm(props) {
         if(props.task) setFormFieldsValues()
     }, [props])
 
+    // Set form fields values to passed task instance values
     const setFormFieldsValues = () => {
         // Reset all field values
         form.resetFields()
@@ -37,6 +40,7 @@ export default function EditForm(props) {
         }
     }
 
+    // Send updated task to server
     const handleFormFinishOk = values => {
         // Hide modal
         setVisible(false);
@@ -72,17 +76,13 @@ export default function EditForm(props) {
         props.handleTaskClear()
     };
 
-    const handleModalCancel = () => {
-        setVisible(false);
-    };
-
     return (
         <>
             <Modal
                 forceRender
                 title="Edit task"
                 visible={visible}
-                onCancel={handleModalCancel}
+                onCancel={() => setVisible(false)}
                 footer={
                     <Button form="taskEditForm" type="primary" htmlType="submit"><PlusOutlined />Edit task</Button>
                 }

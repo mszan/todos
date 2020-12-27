@@ -20,32 +20,31 @@ import "./tasks.css"
 
 const EditForm = React.lazy(() => import('./EditForm'));
 
-
+// Completed tasks
 export class Completed extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             animations: {
                 emptyTasks: {
-                    delay: 0
+                    delay: 0 // Animation delay when empty task list info is displayed
                 }
             },
 
-            tasks: [],
-            tasksFetched: false,
-            tasksStats: {
-                completedOnTime: "",
-                completedLast7Days: "",
-                completedLast30Days: ""
+            tasks: [], // List of tasks
+            tasksFetched: false, // Tasks fetched from server
+            tasksStats: { // Task statistics
+                completedOnTime: "", // Percentage of tasks completed on time
+                completedLast7Days: "", // Amount of tasks completed last 7 days
+                completedLast30Days: "" // Amount of tasks completed last 30 days
             },
 
-            editForm: {
-                task: null,
+            editForm: { // Task edit form
+                task: null, // Currently editing task instance
             }
         }
         this.getTasksStats = this.getTasksStats.bind(this)
     }
-
 
     componentDidMount() {
         this.fetchTasks()
@@ -67,20 +66,18 @@ export class Completed extends React.Component {
                     tasksFetched: true
                 })
             })
-            // Catch request errors
-            .catch(err => {
-                console.log(err)
-            })
+            // Catch errors
+            .catch(err => console.log(err))
 
-            // Get tasks completed on time and set state with them
+            // Update tasks statistics
             .then(() => this.getTasksStats(this.state.tasks))
     };
 
     // Get tasks stats (to be shown at the top of the page)
     getTasksStats = tasks => {
-        let resultOnTime = 0 // Percentage of tasks completed on time
-        let resultLast7Days = 0 // Count of tasks completed last 7 days
-        let resultLast30Days = 0 // Count of tasks completed last 30 days
+        let resultOnTime = null
+        let resultLast7Days = null
+        let resultLast30Days = null
 
         tasks.forEach((item, index) => {
             for (const [key, val] of Object.entries(item)) {
@@ -104,7 +101,8 @@ export class Completed extends React.Component {
         })
     }
 
-    confirmTaskDelete = task => {
+    // Delete task from DB
+    handleTaskDelete = task => {
         axios.delete(`http://localhost:5000/api/tasks/${task.id}`, {headers: authHeader()})
             .then(response => {
                 notification.success({
@@ -112,11 +110,13 @@ export class Completed extends React.Component {
                     placement: 'bottomLeft'
                 });
 
+                // Delete task from state 'tasks' array
                 const tasksArrayIndex = this.state.tasks.findIndex(x => x.id === task.id);
                 const tasksArray = this.state.tasks
                 tasksArray.splice(tasksArrayIndex, 1)
                 this.setState({tasks: tasksArray})
             })
+            // Catch errors
             .catch(err => {
                 notification.error({
                     message: 'Error deleting task',
@@ -126,6 +126,7 @@ export class Completed extends React.Component {
             })
     }
 
+    // Undo task completion (set task active)
     handleTaskCompleteUndo = task => {
         axios.put(`http://localhost:5000/api/tasks/${task.id}`, {
             active: "1",
@@ -137,12 +138,14 @@ export class Completed extends React.Component {
                     placement: 'bottomLeft'
                 });
 
+                // Delete task from state 'tasks' array
                 const tasksArrayIndex = this.state.tasks.findIndex(x => x.id === task.id);
                 const tasksArray = this.state.tasks
                 tasksArray.splice(tasksArrayIndex, 1)
-                this.getTasksStats(this.state.tasks)
+                this.getTasksStats(this.state.tasks) // Update statistics
                 this.setState({tasks: tasksArray})
             })
+            // Catch errors
             .catch(err => {
                 notification.error({
                     message: 'Error marking task active',
@@ -252,7 +255,7 @@ export class Completed extends React.Component {
                                                             </Link>
                                                             <Popconfirm
                                                                 title="Delete task?"
-                                                                onConfirm={() => this.confirmTaskDelete(task)}
+                                                                onConfirm={() => this.handleTaskDelete(task)}
                                                                 okText={<CheckOutlined/>}
                                                                 cancelText={<CloseOutlined/>}
                                                                 placement="left"

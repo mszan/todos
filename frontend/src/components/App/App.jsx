@@ -4,7 +4,7 @@ import {Profile} from "../Users/Profile";
 import {Active} from "../Tasks/Active";
 import {Home} from "../Home/Home";
 import {Result} from "antd";
-import {HeaderBtnLogin} from "../Registration/HeaderBtnLogin";
+import {LoginBtn} from "../Registration/LoginBtn";
 import {Completed} from "../Tasks/Completed";
 import React from "react";
 
@@ -58,7 +58,7 @@ function RouteWrapper({component: Component, title: title, loginRequired: loginR
                     <Result
                         title=""
                         subTitle="You need to be logged in to view this page."
-                        extra={<HeaderBtnLogin />}
+                        extra={<LoginBtn />}
                     />
                 )
             }

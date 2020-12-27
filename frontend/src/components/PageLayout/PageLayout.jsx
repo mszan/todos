@@ -11,39 +11,45 @@ import {
 import {Footer} from "antd/es/layout/layout";
 import './PageLayout.css'
 import SubMenu from "antd/es/menu/SubMenu";
-import {HeaderBtnLogin} from "../Registration/HeaderBtnLogin";
-import {HeaderBtnRegister} from "../Registration/HeaderBtnRegister";
+import {LoginBtn} from "../Registration/LoginBtn";
+import {RegisterBtn} from "../Registration/RegisterBtn";
 import {Link, NavLink} from "react-router-dom";
 import Animate from "rc-animate";
 import Text from "antd/es/typography/Text";
 
 const { Header, Sider, Content } = Layout;
 
+// Main page layout
 export class PageLayout extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            collapsed: this.isSidebarCollapsed(),
-            loginModalVisible: false,
-            registerModalVisible: false,
+            collapsed: this.isSidebarCollapsed(), // Sidebar collapsed
+            loginModalVisible: false, // Login modal with form visibility
+            registerModalVisible: false, // Register modal with form visibility
         }
     }
 
+    // Check if sidebar is collapsed
     isSidebarCollapsed = () => {
         try {
+            // Get data from localStorage
             return JSON.parse(localStorage.getItem("sidebarCollapsed"))
         } catch {
+            // If error (e.g. data not set), set false
             return false
         }
     }
 
-    toggle = () => {
+    // Toggle sidebar collapse
+    sidebarToggle = () => {
         this.setState({
             collapsed: !this.state.collapsed,
         });
-        localStorage.setItem("sidebarCollapsed", String(!this.state.collapsed))
+        localStorage.setItem("sidebarCollapsed", String(!this.state.collapsed)) // Update data in localStorage
     };
 
+    // Login and register modal visibility handler
     handleLoginRegisterModalSwitch = () => {
         this.setState({
             loginModalVisible: !this.state.loginModalVisible,
@@ -77,8 +83,6 @@ export class PageLayout extends React.Component {
                                                 Active
                                             </NavLink>
                                         </Menu.Item>
-                                        {/*<Menu.Item key="3" icon={<FireOutlined />}>Important</Menu.Item>*/}
-                                        {/*<Menu.Item key="4" icon={<FieldTimeOutlined />}>Running out</Menu.Item>*/}
                                         <Menu.Item key="4" icon={<CheckCircleOutlined />}>
                                             <NavLink to="/tasks/completed">
                                                 Completed
@@ -102,17 +106,17 @@ export class PageLayout extends React.Component {
                                 <Col>
                                     {React.createElement(this.state.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
                                         className: 'trigger',
-                                        onClick: this.toggle,
+                                        onClick: this.sidebarToggle,
                                     })}
                                     <Text>{this.props.title}</Text>
                                 </Col>
                                 <Col style={{marginRight: "1rem"}}>
-                                    <HeaderBtnRegister
+                                    <RegisterBtn
                                         visible={this.state.registerModalVisible}
                                         handleLoginRegisterModalSwitch={this.handleLoginRegisterModalSwitch}
                                         handleVisible={() => this.setState({registerModalVisible: !this.state.registerModalVisible})}
                                     />
-                                    <HeaderBtnLogin
+                                    <LoginBtn
                                         visible={this.state.loginModalVisible}
                                         handleLoginRegisterModalSwitch={this.handleLoginRegisterModalSwitch}
                                         handleVisible={() => this.setState({loginModalVisible: !this.state.loginModalVisible})}
@@ -133,7 +137,7 @@ export class PageLayout extends React.Component {
                     </Content>
                     <Animate transitionName="fade" transitionAppear>
                         <Footer className="footer">
-                            Copyright &copy; 2020. Made with love by <a href="mailto:dmszanowski@icloud.com">mszan</a>.
+                            Made with love by <a href="mailto:dmszanowski@icloud.com">mszan</a>.
                         </Footer>
                     </Animate>
                 </Layout>

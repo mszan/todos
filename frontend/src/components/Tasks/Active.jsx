@@ -21,34 +21,33 @@ import "./tasks.css"
 
 const EditForm = React.lazy(() => import('./EditForm'));
 
+// Active tasks
 export class Active extends React.Component {
     state = {
         animations: {
             emptyTasks: {
-                delay: 0
+                delay: 0 // Animation delay when empty task list info is displayed
             }
         },
 
-        tasks: [],
-        tasksFetched: false,
+        tasks: [], // List of tasks
+        tasksFetched: false, // Tasks fetched from server
 
-        editForm: {
-            task: null,
+        editForm: { // Task edit form
+            task: null, // Currently editing task instance
         },
-
-        infiniteScroll: {
-            loading: false,
-            hasMore: true
-        }
     }
 
     componentDidMount() {
         this.fetchTasks()
     }
 
+    // Fetch tasks from server
     fetchTasks = () => {
+        // Send request
         axios.get('http://localhost:5000/api/tasks/?active=1', {headers: authHeader()})
             .then(response => {
+                // Set state with tasks from response
                 this.setState({
                     tasks: response.data,
                     animations: {
@@ -59,12 +58,14 @@ export class Active extends React.Component {
                     tasksFetched: true
                 })
             })
+            // Catch errors
             .catch(err => {
                 console.log(err)
             });
     };
 
-    confirmTaskDelete = task => {
+    // Delete task from DB
+    handleTaskDelete = task => {
         axios.delete(`http://localhost:5000/api/tasks/${task.id}`, {headers: authHeader()})
             .then(response => {
                 notification.success({
@@ -72,11 +73,13 @@ export class Active extends React.Component {
                     placement: 'bottomLeft'
                 });
 
+                // Delete task from state 'tasks' array
                 const tasksArrayIndex = this.state.tasks.findIndex(x => x.id === task.id);
                 const tasksArray = this.state.tasks
                 tasksArray.splice(tasksArrayIndex, 1)
                 this.setState({tasks: tasksArray})
             })
+            // Catch errors
             .catch(err => {
                 notification.error({
                     message: 'Error deleting task',
@@ -86,6 +89,7 @@ export class Active extends React.Component {
             })
     }
 
+    // Set task completed
     handleTaskComplete = task => {
         axios.put(`http://localhost:5000/api/tasks/${task.id}`, {
             active: "0",
@@ -97,11 +101,13 @@ export class Active extends React.Component {
                     placement: 'bottomLeft'
                 });
 
+                // Delete task from state 'tasks' array
                 const tasksArrayIndex = this.state.tasks.findIndex(x => x.id === task.id);
                 const tasksArray = this.state.tasks
                 tasksArray.splice(tasksArrayIndex, 1)
                 this.setState({tasks: tasksArray})
             })
+            // Catch errors
             .catch(err => {
                 notification.error({
                     message: 'Error marking task complete',
@@ -115,11 +121,11 @@ export class Active extends React.Component {
     getDueDateStyleColor = dueDate => {
         if (moment(dueDate).isAfter(moment())) {
             if (moment(dueDate).isAfter(moment().add(1, "day"))) {
-                return "#bfc0c4"
+                return "#bfc0c4" // More than 1 day remaining
             }
-            return "#ffcc00"
+            return "#ffcc00" // Less than 1 day remaining
         }
-        return "#e52807"
+        return "#e52807" // dueDate is after moment() - task is late
     }
 
     render() {
@@ -172,7 +178,7 @@ export class Active extends React.Component {
                                                                 <Popconfirm
                                                                     title="This will permanently delete task. Are you sure?"
                                                                     icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
-                                                                    onConfirm={() => this.confirmTaskDelete(task)}
+                                                                    onConfirm={() => this.handleTaskDelete(task)}
                                                                     okText={<CheckOutlined/>}
                                                                     cancelText={<CloseOutlined/>}
                                                                     placement="left"

@@ -4,12 +4,14 @@ import AuthService from "../../services/auth.service";
 import {Link} from "react-router-dom";
 import axios from "axios";
 
+// Register form
 class RegisterForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {}
     }
 
+    // On form submit
     onFinish = values => {
         // Send register data to server
         axios.post(process.env.REACT_APP_API_URL + "register", {
@@ -42,6 +44,7 @@ class RegisterForm extends React.Component {
                 span: 16,
             },
         };
+
         const tailLayout = {
             wrapperCol: {
                 span: 24,
@@ -148,7 +151,7 @@ class RegisterForm extends React.Component {
                     </Form.Item>
 
                     <Form.Item {...tailLayout} style={{marginBottom: 0}}>
-                        <Button type="primary" htmlType="submit" className="registrationFormBtn">
+                        <Button type="primary" htmlType="submit" className="formBtn">
                             Register
                         </Button>
                     </Form.Item>

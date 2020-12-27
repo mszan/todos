@@ -1,11 +1,11 @@
 import React from "react";
-import {Button, Form, Input, message, Spin} from "antd";
-import {LoadingOutlined, LockOutlined, UserOutlined} from "@ant-design/icons";
-import './LoginForm.css';
+import {Button, Form, Input, message} from "antd";
+import {LockOutlined, UserOutlined} from "@ant-design/icons";
+import './Registration.css';
 import AuthService from "../../services/auth.service";
 import {Link} from "react-router-dom";
-import Text from "antd/es/typography/Text";
 
+// Login form
 class LoginForm extends React.Component {
     constructor(props) {
         super(props);
@@ -16,7 +16,7 @@ class LoginForm extends React.Component {
 
     loginForm = React.createRef();
 
-    // onFinish login form
+    // On form submit
     onFinish = values => {
         // Set button loading state
         this.setState({submitBtnLoading: true})
@@ -68,7 +68,7 @@ class LoginForm extends React.Component {
                     <Button
                         type="primary"
                         htmlType="submit"
-                        className="registrationFormBtn"
+                        className="formBtn"
                         loading={!!this.state.submitBtnLoading}
                     >
                         Login

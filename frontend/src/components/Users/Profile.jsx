@@ -3,12 +3,9 @@ import {Col, Row, Skeleton} from "antd";
 import Avatar from "antd/es/avatar/avatar";
 import {UserOutlined} from "@ant-design/icons";
 import QueueAnim from 'rc-queue-anim';
-import Text from "antd/es/typography/Text";
-import Texty from "rc-texty";
-import {Header} from "antd/lib/layout/layout";
 import Title from "antd/es/typography/Title";
 
-
+// User profile page
 export class Profile extends React.Component {
     state = {
         username: localStorage.getItem("username")

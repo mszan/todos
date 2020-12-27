@@ -6,31 +6,73 @@ import QueueAnim from "rc-queue-anim";
 
 const {Title, Paragraph} = Typography
 
+// Home (landing) page
 export class Home extends React.Component {
     state = {
-        totalTasks: null,
-        totalUsers: null,
+        tasks: {
+            active: null, // Amount of active tasks
+            completed: null, // Amount of completed tasks
+            total: null // Amount of total tasks
+        },
+        users: {
+            total: null // Amount of total users
+        }
     }
 
     componentDidMount() {
         this.getPublicData()
     }
 
+    // Fetch public data from server
     getPublicData = () => {
-        const apiUrl = 'http://localhost:5000/api/public/'
+        const apiUrl = process.env.REACT_APP_API_URL + "public/"
+
+        // Fetch users data
         axios.get(apiUrl + 'users')
             .then(response => {
-                this.setState({totalUsers: response.data[0]['count']})
+                this.setState({
+                    users: {
+                        ...this.state.users,
+                        total: response.data[0]['count']
+                    }
+                })
             })
 
-        axios.get(apiUrl + 'tasks')
+        // Fetch tasks data
+        axios.get(apiUrl + 'tasks?active=1')
             .then(response => {
-                this.setState({totalTasks: response.data[0]['count']})
+                this.setState({
+                    tasks: {
+                        ...this.state.tasks,
+                        active: response.data[0]['count']
+                    }
+                })
+            })
+            .catch(err => console.log(err))
+            .then(() => {
+                axios.get(apiUrl + 'tasks?active=0')
+                    .then(response => {
+                        this.setState({
+                            tasks: {
+                                ...this.state.tasks,
+                                completed: response.data[0]['count']
+                            }
+                        })
+                    })
+                    .catch(err => console.log(err))
+                    .then(() => {
+                        console.log('after proms')
+                        this.setState({
+                            tasks: {
+                                ...this.state.tasks,
+                                total: this.state.tasks.active + this.state.tasks.completed
+                            }
+                        })
+                    })
             })
     }
 
     render() {
-        const {totalTasks, totalUsers} = this.state
         return (
             <QueueAnim type="scaleY">
                 <Row key="1" gutter={8}>
@@ -62,16 +104,16 @@ export class Home extends React.Component {
                         <Title> About us </Title>
                     </Col>
                     <Col span={6}>
-                        <Statistic title="Active users" value={999}/>
+                        {this.state.users.total ? <Statistic title="Total users" value={this.state.users.total}/> : <Spin />}
                     </Col>
                     <Col span={6}>
-                        {totalUsers ? <Statistic title="Total users" value={totalUsers}/> : <Spin />}
+                        {this.state.tasks.total ? <Statistic title="Total tasks" value={this.state.tasks.total}/> : <Spin />}
                     </Col>
                     <Col span={6}>
-                        <Statistic title="Active tasks" value={999}/>
+                        {this.state.tasks.active ? <Statistic title="Active tasks" value={this.state.tasks.active}/> : <Spin />}
                     </Col>
                     <Col span={6}>
-                        {totalUsers ? <Statistic title="Total tasks" value={totalTasks}/> : <Spin />}
+                        {this.state.tasks.completed ? <Statistic title="Completed tasks" value={this.state.tasks.completed}/> : <Spin />}
                     </Col>
                 </Row>
             </QueueAnim>

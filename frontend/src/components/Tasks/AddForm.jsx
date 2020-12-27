@@ -6,7 +6,7 @@ import authHeader from "../../services/auth-header";
 import QueueAnim from "rc-queue-anim";
 import Animate from "rc-animate";
 
-// <PlusOutlined style={{color: "#1890ff"}}/>
+// Form for adding new tasks
 export default function AddForm(props) {
     const [visible, setVisible] = React.useState(false);
     const [confirmLoading, setConfirmLoading] = React.useState(false);
