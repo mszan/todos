@@ -45,7 +45,7 @@ export class Active extends React.Component {
     // Fetch tasks from server
     fetchTasks = () => {
         // Send request
-        axios.get('http://localhost:5000/api/tasks/?active=1', {headers: authHeader()})
+        axios.get(process.env.REACT_APP_API_URL + 'tasks/?active=1', {headers: authHeader()})
             .then(response => {
                 // Set state with tasks from response
                 this.setState({
@@ -66,7 +66,7 @@ export class Active extends React.Component {
 
     // Delete task from DB
     handleTaskDelete = task => {
-        axios.delete(`http://localhost:5000/api/tasks/${task.id}`, {headers: authHeader()})
+        axios.delete(process.env.REACT_APP_API_URL + `tasks/${task.id}`, {headers: authHeader()})
             .then(response => {
                 notification.success({
                     message: 'Task deleted',
@@ -91,7 +91,7 @@ export class Active extends React.Component {
 
     // Set task completed
     handleTaskComplete = task => {
-        axios.put(`http://localhost:5000/api/tasks/${task.id}`, {
+        axios.put(process.env.REACT_APP_API_URL + `tasks/${task.id}`, {
             active: "0",
             completeDate: moment().format('YYYY-MM-DD HH:mm:ss')
         }, {headers: authHeader()})
