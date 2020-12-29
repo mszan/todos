@@ -1,8 +1,6 @@
 import axios from "axios";
 import {message} from "antd";
 
-// TODO: handle false login 401 response
-
 // Refreshes JWT
 axios.interceptors.response.use(response => {
     // Response good
@@ -39,6 +37,8 @@ axios.interceptors.response.use(response => {
                 .then(res => res.json())
                 .then(res => {
                 // Set new tokens in localStorage
+                    console.log(res)
+
                 localStorage.setItem("accessToken", res.newAccessToken)
                 localStorage.setItem("refreshToken", res.newRefreshToken)
 
@@ -52,7 +52,7 @@ axios.interceptors.response.use(response => {
             resolve(res);
         }
 
-        // If response returned 403
+        // If response returned 401
         if (err.response.status === 401) {
             throw Promise.reject(err);
         }
