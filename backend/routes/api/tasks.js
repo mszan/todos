@@ -9,6 +9,7 @@ app.get("/", (req, res) => {
         if (res.locals.tasksPrivileges['getTasks'] === 0) {
             return res.sendStatus(403)
         }
+
         // Get data from request parameters.
         const { orderField, active } = req.query
         let { orderType } = req.query
@@ -46,11 +47,20 @@ app.get("/all", (req, res) => {
             return res.sendStatus(403)
         }
 
+        // Get data from request parameters.
+        const { userId } = req.query
+
         // Query for tasks.
-        pool.query("SELECT id, title, description, priority, addDate, dueDate, completeDate FROM tasks",
-            [res.locals.userId])
+        let query = `SELECT id, title, description, priority, addDate, dueDate, completeDate, users__id FROM tasks`
+        userId ? query += ` WHERE users__id = ${userId}` : null
+
+        pool.query(query, [res.locals.userId])
             .then(queryRes => {
                 res.json(queryRes[0])
+            })
+            .catch(err => {
+                console.log(err)
+                res.sendStatus(400)
             })
     }
     catch (err) {
@@ -130,6 +140,11 @@ app.put("/:id", async (req, res) => {
 // Delete task related to authenticated user.
 app.delete("/:id", (req, res) => {
     try {
+        // TODO: Add deleteTask privilege.
+        // if (res.locals.tasksPrivileges['deleteTask'] === 0) {
+        //     return res.sendStatus(403)
+        // }
+
         // Get task's owner id.
         pool.query(`SELECT users__id FROM tasks WHERE id = ?`,
             [req.params.id])
