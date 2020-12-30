@@ -140,10 +140,9 @@ app.put("/:id", async (req, res) => {
 // Delete task related to authenticated user.
 app.delete("/:id", (req, res) => {
     try {
-        // TODO: Add deleteTask privilege.
-        // if (res.locals.tasksPrivileges['deleteTask'] === 0) {
-        //     return res.sendStatus(403)
-        // }
+        if (res.locals.tasksPrivileges['deleteTasks'] === 0) {
+            return res.sendStatus(403)
+        }
 
         // Get task's owner id.
         pool.query(`SELECT users__id FROM tasks WHERE id = ?`,
