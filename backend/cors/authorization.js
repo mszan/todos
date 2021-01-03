@@ -17,6 +17,7 @@ async function authenticate(req, res, next) {
     if (token == null) return res.sendStatus(401)
     authorization.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, payload) => {
         if (err){
+            console.log(err)
             return res.sendStatus(403)
         }
         req.payload = payload
