@@ -1,60 +1,90 @@
+const moment = require('moment')
 const express = require('express')
 const app = express()
 const pool = require("../../db")
 
-// Gets all active tasks related to authenticated user.
+// Get tasks.
 app.get("/", (req, res) => {
     try {
-        // Check if user has privileges.
-        if (res.locals.tasksPrivileges['getTasks'] === 0) {
-            return res.sendStatus(403)
+        // Check if user has getTasks privilege.
+        if (res.locals.tasksPrivileges['getTasks'] === 0) return res.sendStatus(403)
+
+        // Get data from 'all' parameter. Display all users' tasks if it's not null.
+        let { all } = req.query
+        if (all) {
+            // Check if user has getAllTasks privilege.
+            if (res.locals.tasksPrivileges['getAllTasks'] === 0) return res.sendStatus(403)
+
+            // Check if parameter data is valid (must be a boolean).
+            try {
+                all = JSON.parse(all)
+            } catch {
+                return res.status(400).json({"msg": "'all' parameter must be a boolean represented by string - 'true' or 'false'."})
+            }
         }
 
-        // Get data from request parameters.
-        const { orderField, active } = req.query
+        // Get date from 'addDate' parameter. Input format: YYYY-MM-DD
+        let { addDate } = req.query
+        if (addDate) {
+            // Check if parameter data is valid.
+            try {
+                addDate = moment(addDate, "YYYY-MM-DD", true)
+                if (!addDate.isValid()) return res.status(400).json({"msg": "'addDate' parameter must be a moment() with YYYY-MM-DD format'."})
+            } catch {
+                return res.status(400).json({"msg": "'addDate' parameter must be a moment() with YYYY-MM-DD format'."})
+            }
+        }
+
+        // Get date from 'dueDate' parameter. Input format: YYYY-MM-DD
+        let { dueDate } = req.query
+        if (dueDate) {
+            // Check if parameter data is valid.
+            try {
+                dueDate = moment(dueDate, "YYYY-MM-DD", true)
+                if (!dueDate.isValid()) return res.status(400).json({"msg": "'dueDate' parameter must be a moment() with YYYY-MM-DD format'."})
+            } catch {
+                return res.status(400).json({"msg": "'dueDate' parameter must be a moment() with YYYY-MM-DD format'."})
+            }
+        }
+
+        // Get date from 'completeDate' parameter. Input format: YYYY-MM-DD
+        let { completeDate } = req.query
+        if (completeDate) {
+            // Check if parameter data is valid.
+            try {
+                completeDate = moment(completeDate, "YYYY-MM-DD", true)
+                if (!completeDate.isValid()) return res.status(400).json({"msg": "'completeDate' parameter must be a moment() with YYYY-MM-DD format'."})
+            } catch {
+                return res.status(400).json({"msg": "'completeDate' parameter must be a moment() with YYYY-MM-DD format'."})
+            }
+        }
+
+        // Get data 'orderField' and 'orderType' request parameters.
+        const { orderField } = req.query
         let { orderType } = req.query
 
-        // If orderField is set, check orderType value. If its not "ASC" or "DESC
+        // If orderField is set, check orderType value. If its not "ASC" or "DESC.
         if (orderField) {
             if (!(orderType === "ASC" || orderType === "DESC")) {
                 return res.status(400).json({"msg": "Missing / wrong 'orderType' value. Use 'ASC' or 'DESC'."})
             }
         }
 
-        // Query for tasks.
-        let query = `SELECT id, active, title, description, priority, addDate, dueDate, completeDate FROM tasks WHERE users__id = ${res.locals.userId}`
-        active ? query += ` AND active = ${active}` : null // Get active tasks if 'active' parameter is not null
-        orderField ? query += ` ORDER BY ${orderField} ${orderType}` : query += ` ORDER BY -dueDate DESC` // Order, more here: https://stackoverflow.com/questions/2051602/mysql-orderby-a-number-nulls-last
+        // Get data from 'active' parameter.
+        const { active } = req.query
+
+        // Base query string
+        let query = `SELECT id, active, title, description, priority, addDate, dueDate, completeDate FROM tasks WHERE TRUE` // Base query.
+
+        if (!all) query+= ` AND users__id = ${res.locals.userId}` // Filter by currently logged user.
+        if (active) query += ` AND active = ${active}` // Filter by active tasks.
+        if (addDate) query += ` AND addDate >= "${addDate.format("YYYY-MM-DD")} 00:00:00" AND addDate < "${addDate.add(1, "days").format("YYYY-MM-DD")} 00:00:00"` // Filter by addDate.
+        if (dueDate) query += ` AND dueDate >= "${dueDate.format("YYYY-MM-DD")} 00:00:00" AND dueDate < "${dueDate.add(1, "days").format("YYYY-MM-DD")} 00:00:00"` // Filter by dueDate.
+        if (completeDate) query += ` AND completeDate >= "${completeDate.format("YYYY-MM-DD")} 00:00:00" AND completeDate < "${completeDate.add(1, "days").format("YYYY-MM-DD")} 00:00:00"` // Filter by completeDate.
+
+        orderField ? query += ` ORDER BY ${orderField} ${orderType}` : query += ` ORDER BY -dueDate DESC` // Correct ordering, more here: https://stackoverflow.com/questions/2051602/mysql-orderby-a-number-nulls-last
+
         pool.query(query)
-            .then(queryRes => {
-                res.json(queryRes[0])
-            })
-            .catch(err => {
-                console.log(err)
-                res.sendStatus(400)
-            })
-    }
-    catch (err) {
-        console.error(err.message)
-    }
-})
-
-// Gets all tasks.
-app.get("/all", (req, res) => {
-    try {
-        // Check if user has privileges.
-        if (res.locals.tasksPrivileges['getAllTasks'] === 0) {
-            return res.sendStatus(403)
-        }
-
-        // Get data from request parameters.
-        const { userId } = req.query
-
-        // Query for tasks.
-        let query = `SELECT id, title, description, priority, addDate, dueDate, completeDate, users__id FROM tasks`
-        userId ? query += ` WHERE users__id = ${userId}` : null
-
-        pool.query(query, [res.locals.userId])
             .then(queryRes => {
                 res.json(queryRes[0])
             })
