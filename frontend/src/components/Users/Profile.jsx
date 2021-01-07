@@ -1,5 +1,5 @@
 import React from 'react';
-import {Col, Divider, Row, Skeleton, Statistic} from "antd";
+import {Col, Divider, Row, Skeleton, Spin, Statistic} from "antd";
 import Avatar from "antd/es/avatar/avatar";
 import {UserOutlined} from "@ant-design/icons";
 import QueueAnim from 'rc-queue-anim';
@@ -75,17 +75,25 @@ export class Profile extends React.Component {
     getChartData = async () => {
         const today = moment()
         let registerDate = moment(this.state.user.registerDate)
-        console.log(this.state.user.registerDate)
 
         let dataKeys = ['addDate', 'completeDate']
-
         let finalData = [
             {
-                label: 'addDate',
+                label: 'Tasks added',
+                backgroundColor: 'rgba(0,0,0,0)',
+                borderColor: 'rgb(24,144,255)',
+                pointBackgroundColor: 'rgba(24,144,255)',
+                pointRadius: 0,
+                fill: false,
                 data: []
             },
             {
-                label: 'completeDate',
+                label: 'Tasks completed',
+                backgroundColor: 'rgb(0,0,0,0)',
+                borderColor: 'rgb(205,104,104)',
+                pointBackgroundColor: 'rgba(205,104,104)',
+                pointRadius: 0,
+                fill: false,
                 data: []
             },
         ]
@@ -93,19 +101,19 @@ export class Profile extends React.Component {
         // Loop every day since user was registered
         for (registerDate; registerDate.isBefore(today); registerDate.add(1, "days")) {
             // Loop every dateType
-            dataKeys.forEach(await function (key) {
+            for (const key of dataKeys) {
                 // Get data for specific dateType from server
-                axios.get(process.env.REACT_APP_API_URL + `tasks?${key}=${registerDate.format("YYYY-MM-DD")}`, {headers: authHeader()})
+                await axios.get(process.env.REACT_APP_API_URL + `tasks?${key}=${registerDate.format("YYYY-MM-DD")}`, {headers: authHeader()})
                     .then(response => {
                         if (key === 'addDate') {
-                            finalData[0]['data'].push({x: registerDate.format(), y: response.data.length})
+                            finalData[0]['data'].push({x: registerDate.format("YYYY-MM-DD"), y: response.data.length})
                         } else {
+                            finalData[1]['data'].push({x: registerDate.format("YYYY-MM-DD"), y: response.data.length})
                             // finalData[1]['data'].push([registerDate, response.data.length])
                         }
                     })
-            })
+            }
         }
-        console.log(finalData)
         await this.setState({chart: {tasksData: finalData}})
     }
 
@@ -130,12 +138,13 @@ export class Profile extends React.Component {
                         <Divider key="headerDivider"/>
                     </QueueAnim>
                 </Row>
-                {this.state.tasks.fetched ?
-                    <Row gutter={16}>
-                        <QueueAnim component={Col} componentProps={{span: 24}} type="scaleY">
-                            <TasksSummaryChart tasksData={this.state.chart.tasksData}/>
-                        </QueueAnim>
-                    </Row> : null}
+                <Row gutter={16}>
+                    <Title level={4}>Tasks summary</Title>
+                    <QueueAnim component={Col} componentProps={{span: 24}} type="scaleY">
+                        {this.state.chart.tasksData ?
+                            <TasksSummaryChart tasksData={this.state.chart.tasksData}/> : <Skeleton active paragraph={{rows: 8, width: '100%'}} title={false}/>}
+                    </QueueAnim>
+                </Row>
             </React.Fragment>
         );
     }
