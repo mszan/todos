@@ -1,5 +1,5 @@
 import React from "react";
-import {Button, Checkbox, Divider, Form, Image, Input, notification} from "antd";
+import {Button, Checkbox, Divider, Form, Input, notification} from "antd";
 import AuthService from "../../services/auth.service";
 import {Link} from "react-router-dom";
 import axios from "axios";

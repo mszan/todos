@@ -2,6 +2,7 @@ import React from "react";
 import {Button, Spin} from "antd";
 import Modal from "antd/es/modal/Modal";
 import {UserAddOutlined} from "@ant-design/icons";
+
 const RegisterForm = React.lazy(() => import('./RegisterForm'));
 
 // Register button that opens form

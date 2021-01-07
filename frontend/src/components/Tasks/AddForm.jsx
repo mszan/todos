@@ -1,10 +1,8 @@
-import {Badge, Button, DatePicker, Form, Input, Modal, notification, Radio, Tooltip} from 'antd';
-import {ArrowDownOutlined, ExclamationOutlined, PlusOutlined} from "@ant-design/icons";
+import {Badge, Button, DatePicker, Form, Input, Modal, notification, Radio} from 'antd';
+import {PlusOutlined} from "@ant-design/icons";
 import React from "react";
 import axios from "axios";
 import authHeader from "../../services/auth-header";
-import QueueAnim from "rc-queue-anim";
-import Animate from "rc-animate";
 
 // Form for adding new tasks
 export default function AddForm(props) {

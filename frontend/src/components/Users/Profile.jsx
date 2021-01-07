@@ -1,5 +1,5 @@
 import React from 'react';
-import {Col, Divider, Row, Skeleton, Spin, Statistic} from "antd";
+import {Col, Divider, Row, Skeleton} from "antd";
 import Avatar from "antd/es/avatar/avatar";
 import {UserOutlined} from "@ant-design/icons";
 import QueueAnim from 'rc-queue-anim';
@@ -72,6 +72,7 @@ export class Profile extends React.Component {
             .then(this.getChartData)
     }
 
+    // Get data for tasks summary chart
     getChartData = async () => {
         const today = moment()
         let registerDate = moment(this.state.user.registerDate)

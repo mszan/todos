@@ -44,11 +44,12 @@ function App() {
     );
 }
 
-
+// Wrapper for route components
 function RouteWrapper({component: Component, title: title, loginRequired: loginRequired, navKey: navKey}){
     const username = localStorage.getItem("username")
     const accessToken = localStorage.getItem("accessToken")
 
+    // Get layout's inner component depending on logged user
     const getComponent = () => {
         if (loginRequired) {
             if (username && accessToken) {

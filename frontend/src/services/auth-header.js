@@ -1,3 +1,4 @@
+// AUTHENTICATION HEADER
 // Get auth header for request
 export default function authHeader() {
     // Get data from local storage

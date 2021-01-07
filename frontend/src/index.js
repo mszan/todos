@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import 'antd/dist/antd.css'; // Ant Design
 import App from './components/App/App';
 import reportWebVitals from './reportWebVitals';
