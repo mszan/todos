@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "app",
+    "start": "HOST=localhost node app.js",
     "dev": "app"
   },
   "dependencies": {
