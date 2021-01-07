@@ -61,7 +61,6 @@ export class Home extends React.Component {
                     })
                     .catch(err => console.log(err))
                     .then(() => {
-                        console.log('after proms')
                         this.setState({
                             tasks: {
                                 ...this.state.tasks,
@@ -92,14 +91,8 @@ export class Home extends React.Component {
                         />
                     </Col>
                 </Row>
-                <Row key="4" gutter={8}>
-                    <Col span={24}>
-                        <Paragraph>Nulla at volutpat diam ut venenatis tellus. Facilisis leo vel fringilla est ullamcorper eget nulla facilisi. Amet volutpat consequat  auctor elit sed vulputate mi sit. Phasellus egestas tellus rutrum tellus pellentesque eu tincidunt. Commodo nulla facilisi nullam vehicula ipsum a arcu cursus vitae. Aliquet lectus proin nibh nisl condimentum id venenatis a. Suspendisse ultrices gravida dictum fusce ut placerat. Arcu felis bibendum ut tristique et egestas quis ipsum. Pellentesque diam volutpat commodo sed egestas egestas fringilla. Mattis nunc sed blandit libero volutpat. Ac placerat vestibulum lectus mauris ultrices. Vel elit scelerisque mauris pellentesque pulvinar pellentesque habitant. Consectetur libero id faucibus nisl tincidunt. Faucibus purus in massa tempor nec feugiat nisl pretium.</Paragraph>
-                        <Paragraph>Viverra vitae congue eu consequat ac felis donec et. Vitae semper quis lectus nulla at volutpat diam ut. Id porta nibh venenatis cras sed felis eget. Faucibus ornare suspendisse sed nisi. Posuere urna nec tincidunt praesent semper feugiat nibh sed.</Paragraph>
-                        <Divider />
-                    </Col>
-                </Row>
                 <Row key="5" gutter={8}>
+                    <Divider />
                     <Col span={24}>
                         <Title> About us </Title>
                     </Col>
@@ -110,10 +103,16 @@ export class Home extends React.Component {
                         {this.state.tasks.total ? <Statistic title="Total tasks" value={this.state.tasks.total}/> : <Spin />}
                     </Col>
                     <Col span={6}>
-                        {this.state.tasks.active ? <Statistic title="Active tasks" value={this.state.tasks.active}/> : <Spin />}
+                        {this.state.tasks.active || this.state.tasks.active === 0 ? <Statistic title="Active tasks" value={this.state.tasks.active}/> : <Spin />}
                     </Col>
                     <Col span={6}>
                         {this.state.tasks.completed ? <Statistic title="Completed tasks" value={this.state.tasks.completed}/> : <Spin />}
+                    </Col>
+                </Row>
+                <Row key="4" gutter={8} style={{marginTop: '1rem'}}>
+                    <Col span={24}>
+                        <Paragraph>Nulla at volutpat diam ut venenatis tellus. Facilisis leo vel fringilla est ullamcorper eget nulla facilisi. Amet volutpat consequat  auctor elit sed vulputate mi sit. Phasellus egestas tellus rutrum tellus pellentesque eu tincidunt. Commodo nulla facilisi nullam vehicula ipsum a arcu cursus vitae. Aliquet lectus proin nibh nisl condimentum id venenatis a. Suspendisse ultrices gravida dictum fusce ut placerat. Arcu felis bibendum ut tristique et egestas quis ipsum. Pellentesque diam volutpat commodo sed egestas egestas fringilla. Mattis nunc sed blandit libero volutpat. Ac placerat vestibulum lectus mauris ultrices. Vel elit scelerisque mauris pellentesque pulvinar pellentesque habitant. Consectetur libero id faucibus nisl tincidunt. Faucibus purus in massa tempor nec feugiat nisl pretium.</Paragraph>
+                        <Paragraph>Viverra vitae congue eu consequat ac felis donec et. Vitae semper quis lectus nulla at volutpat diam ut. Id porta nibh venenatis cras sed felis eget. Faucibus ornare suspendisse sed nisi. Posuere urna nec tincidunt praesent semper feugiat nibh sed.</Paragraph>
                     </Col>
                 </Row>
             </QueueAnim>

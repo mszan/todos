@@ -217,6 +217,7 @@ export class Active extends React.Component {
                                                             </React.Fragment>
                                                         }
                                                         description={task.description}
+                                                        style={{width: '100%'}}
                                                     />
                                                 </List.Item>
                                             </div>

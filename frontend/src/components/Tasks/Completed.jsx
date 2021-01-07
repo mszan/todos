@@ -282,6 +282,7 @@ export class Completed extends React.Component {
                                                             </React.Fragment>
                                                         }
                                                         description={task.description}
+                                                        style={{width: '100%'}}
                                                     />
                                                 </List.Item>
                                             </div>

@@ -3,6 +3,7 @@ import {Button, Checkbox, Divider, Form, Image, Input, notification} from "antd"
 import AuthService from "../../services/auth.service";
 import {Link} from "react-router-dom";
 import axios from "axios";
+import './Registration.css'
 
 // Register form
 class RegisterForm extends React.Component {
@@ -13,6 +14,7 @@ class RegisterForm extends React.Component {
 
     // On form submit
     onFinish = values => {
+        console.log(values)
         // Send register data to server
         axios.post(process.env.REACT_APP_API_URL + "register", {
             username: values.username,
@@ -23,7 +25,15 @@ class RegisterForm extends React.Component {
         })
             .then(res => {
                 // Login user and reload page
-                AuthService.login(values.username, values.password).then(() => window.location.reload());
+                AuthService.login(values.username, values.password)
+                    .then(() => window.location.reload())
+                    .catch(err => {
+                        notification.error({
+                            message: 'Error',
+                            placement: 'bottomLeft'
+                        });
+                        console.log(err)
+                    });
             })
             // Catch errors and display notification
             .catch(err => {
@@ -139,6 +149,7 @@ class RegisterForm extends React.Component {
                         {...tailLayout}
                         style={{textAlign: "center"}}
                         name="agreeRules"
+                        label="agreeRules"
                         rules={[
                             {
                                 validator: (_, value) =>

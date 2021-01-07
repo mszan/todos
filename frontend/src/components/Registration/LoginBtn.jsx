@@ -7,12 +7,12 @@ import {Redirect} from "react-router";
 
 const LoginForm = React.lazy(() => import('./LoginForm'));
 
-// Login button that opens form
+// Login / logout user button
 export class LoginBtn extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            redirect: null
+            redirect: null // Redirect to home page?
         }
         this.handleLogout = this.handleLogout.bind(this)
     }
@@ -26,6 +26,7 @@ export class LoginBtn extends React.Component {
     render() {
         const username = localStorage.getItem("username")
 
+        // If user is logged in, display logout button
         if (username) {
             return (
                 <React.Fragment>
@@ -38,10 +39,12 @@ export class LoginBtn extends React.Component {
             )
         }
 
+        // Redirect to home page
         if (this.state.redirect) {
             return (<Redirect to='/' />)
         }
 
+        // Login button with form
         return (
             <React.Fragment>
                 <Button type="primary" onClick={this.props.handleVisible}>

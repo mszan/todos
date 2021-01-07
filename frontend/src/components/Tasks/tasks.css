@@ -15,8 +15,13 @@
 .taskListBtns {
     opacity: 0;
     transition: opacity 100ms ease-in-out;
+    font-size: small;
 }
 
 .taskListBtns:hover {
     opacity: 1!important;
+}
+
+.ant-list-item-meta-content {
+    width: 100% /* Task description full width on small display.*/
 }

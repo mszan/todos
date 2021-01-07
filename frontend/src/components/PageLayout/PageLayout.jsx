@@ -34,6 +34,7 @@ export class PageLayout extends React.Component {
     isSidebarCollapsed = () => {
         try {
             // Get data from localStorage
+            if (window.innerWidth < 400) return true // If user uses small display, collapse sidebar
             return JSON.parse(localStorage.getItem("sidebarCollapsed"))
         } catch {
             // If error (e.g. data not set), set false
@@ -62,7 +63,14 @@ export class PageLayout extends React.Component {
 
         return (
             <Layout>
-                <Sider trigger={null} collapsible collapsed={this.state.collapsed} style={{ overflow: 'auto', height: '100vh', position: 'sticky', top: 0, left: 0, }}>
+                <Sider
+                    trigger={null}
+                    collapsible
+                    collapsed={this.state.collapsed}
+                    breakpoint="lg"
+                    collapsedWidth={0}
+                    style={{ overflow: 'auto', height: '100vh', position: 'sticky', top: 0, left: 0 }}
+                >
                     <Animate transitionName="fade" transitionAppear>
                         <div key="siderLogo" className="logo">
                             <Link to="">
@@ -102,7 +110,7 @@ export class PageLayout extends React.Component {
                 <Layout className="site-layout">
                     <Header className="site-layout-background" style={{padding: 0}}>
                         <Animate transitionName="fade" transitionAppear>
-                            <Row key="pageHeader" justify="space-between">
+                            <Row key="pageHeader" justify="space-between" style={{minWidth: 295}}>
                                 <Col>
                                     {React.createElement(this.state.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
                                         className: 'trigger',
@@ -130,6 +138,7 @@ export class PageLayout extends React.Component {
                         style={{
                             margin: '24px 16px',
                             padding: 24,
+                            minWidth: '90vw'
                         }}
                     >
 
