@@ -3,7 +3,7 @@ const app = express()
 const pool = require("../../db")
 const moment = require('moment')
 const authToken = require("../../cors/authorization")
-const bcrypt = require("bcrypt")
+const bcrypt = require("bcryptjs")
 
 // Register new user
 app.post("/register", async (req, res) => {
