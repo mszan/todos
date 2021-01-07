@@ -25,13 +25,13 @@ export class Profile extends React.Component {
                 fetched: false,
                 data: "",
                 total: ""
-            }
+            },
+            chart: {}
         }
     }
 
     componentDidMount() {
         this.fetchUser(localStorage.getItem("username"))
-        this.fetchTasks()
     }
 
     // Fetch user information from server
@@ -46,6 +46,7 @@ export class Profile extends React.Component {
             })
             // Catch errors
             .catch(err => console.log(err))
+            .then(this.fetchTasks)
     }
 
     // Fetch tasks from server
@@ -68,6 +69,44 @@ export class Profile extends React.Component {
             .catch(err => {
                 console.log(err)
             })
+            .then(this.getChartData)
+    }
+
+    getChartData = async () => {
+        const today = moment()
+        let registerDate = moment(this.state.user.registerDate)
+        console.log(this.state.user.registerDate)
+
+        let dataKeys = ['addDate', 'completeDate']
+
+        let finalData = [
+            {
+                label: 'addDate',
+                data: []
+            },
+            {
+                label: 'completeDate',
+                data: []
+            },
+        ]
+
+        // Loop every day since user was registered
+        for (registerDate; registerDate.isBefore(today); registerDate.add(1, "days")) {
+            // Loop every dateType
+            dataKeys.forEach(await function (key) {
+                // Get data for specific dateType from server
+                axios.get(process.env.REACT_APP_API_URL + `tasks?${key}=${registerDate.format("YYYY-MM-DD")}`, {headers: authHeader()})
+                    .then(response => {
+                        if (key === 'addDate') {
+                            finalData[0]['data'].push({x: registerDate.format(), y: response.data.length})
+                        } else {
+                            // finalData[1]['data'].push([registerDate, response.data.length])
+                        }
+                    })
+            })
+        }
+        console.log(finalData)
+        await this.setState({chart: {tasksData: finalData}})
     }
 
     render() {
@@ -78,9 +117,12 @@ export class Profile extends React.Component {
                         <Avatar key="avatar" shape="square" size={128} icon={<UserOutlined/>}/>
                     </QueueAnim>
                     <QueueAnim component={Col} type="scaleY">
-                        {this.state.user.username ? <Title key="username" level={1}> {this.state.user.username} </Title> : null}
-                        {this.state.user.firstname && this.state.user.lastname ? <Title key="fullName" level={5}> {this.state.user.firstname} {this.state.user.lastname} </Title> : null}
-                        {this.state.user.registerDate ? <Paragraph key="registerDate"> Joined {moment(this.state.user.registerDate).fromNow()} </Paragraph> : null}
+                        {this.state.user.username ?
+                            <Title key="username" level={1}> {this.state.user.username} </Title> : null}
+                        {this.state.user.firstname && this.state.user.lastname ? <Title key="fullName"
+                                                                                        level={5}> {this.state.user.firstname} {this.state.user.lastname} </Title> : null}
+                        {this.state.user.registerDate ? <Paragraph
+                            key="registerDate"> Joined {moment(this.state.user.registerDate).fromNow()} </Paragraph> : null}
                     </QueueAnim>
                 </Row>
                 <Row gutter={16}>
@@ -91,7 +133,7 @@ export class Profile extends React.Component {
                 {this.state.tasks.fetched ?
                     <Row gutter={16}>
                         <QueueAnim component={Col} componentProps={{span: 24}} type="scaleY">
-                            <TasksSummaryChart tasks={this.state.tasks.data} user={this.state.user}/>
+                            <TasksSummaryChart tasksData={this.state.chart.tasksData}/>
                         </QueueAnim>
                     </Row> : null}
             </React.Fragment>
