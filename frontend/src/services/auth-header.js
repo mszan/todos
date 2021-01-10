@@ -8,7 +8,10 @@ export default function authHeader() {
     // Check if data exists
     if (username && accessToken) {
         // Return header
-        return {Authorization: "Bearer " + accessToken };
+        return {
+            'Authorization': "Bearer " + accessToken,
+            'Content-Type':  'application/json',
+        };
     } else {
         // Return empty dict
         return {};
