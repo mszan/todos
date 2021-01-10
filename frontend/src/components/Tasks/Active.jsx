@@ -16,7 +16,6 @@ import AddForm from "./AddForm";
 import Text from "antd/es/typography/Text";
 import {Link} from "react-router-dom";
 import QueueAnim from "rc-queue-anim";
-import emptyImg from "./empty.svg";
 import "./tasks.css"
 
 const EditForm = React.lazy(() => import('./EditForm'));
@@ -233,7 +232,7 @@ export class Active extends React.Component {
                             key="emptyTasks"
                             image={
                                 this.state.tasksFetched && this.state.tasks.length <= 0 ?
-                                    emptyImg :
+                                    "https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg" :
                                     <LoadingOutlined style={{fontSize: 24}} spin/>
                             }
                             imageStyle={{height: 60}}
