@@ -33,20 +33,16 @@ export class PageLayout extends React.Component {
     // Check if sidebar is collapsed
     isSidebarCollapsed = () => {
         try {
-            // Get data from localStorage
             if (window.innerWidth < 400) return true // If user uses small display, collapse sidebar
-            return JSON.parse(localStorage.getItem("sidebarCollapsed"))
+            return JSON.parse(localStorage.getItem("sidebarCollapsed")) // Get data from localStorage
         } catch {
-            // If error (e.g. data not set), set false
-            return false
+            return false // If error (e.g. data not set), set false
         }
     }
 
     // Toggle sidebar collapse
     sidebarToggle = () => {
-        this.setState({
-            collapsed: !this.state.collapsed,
-        });
+        this.setState({collapsed: !this.state.collapsed});
         localStorage.setItem("sidebarCollapsed", String(!this.state.collapsed)) // Update data in localStorage
     };
 
@@ -67,8 +63,8 @@ export class PageLayout extends React.Component {
                     trigger={null}
                     collapsible
                     collapsed={this.state.collapsed}
-                    breakpoint="lg"
-                    collapsedWidth={0}
+                    // breakpoint="lg"
+                    collapsedWidth={window.innerWidth < 400 ? 0 : 80}
                     style={{ overflow: 'auto', height: '100vh', position: 'sticky', top: 0, left: 0 }}
                 >
                     <Animate transitionName="fade" transitionAppear>
@@ -138,7 +134,7 @@ export class PageLayout extends React.Component {
                         style={{
                             margin: '24px 16px',
                             padding: 24,
-                            minWidth: '90vw'
+                            minWidth: window.innerWidth < 400 ? '100vw' : null,
                         }}
                     >
 
