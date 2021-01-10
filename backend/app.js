@@ -8,8 +8,7 @@ const apiRoutes = require('./routes/api/_api')
 const authMiddleware = require("./cors/authorization");
 const middleware = require("./cors/middleware");
 
-app.use(cors())
-app.use(middleware.setCorsHeader)
+app.use(cors({origin: "https://todos.mszanowski.pl"}))
 app.use(express.json());
 app.use(logger('dev'));
 
