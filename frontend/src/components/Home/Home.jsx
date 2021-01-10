@@ -97,16 +97,16 @@ export class Home extends React.Component {
                         <Title> About us </Title>
                     </Col>
                     <Col span={6}>
-                        {this.state.users.total ? <Statistic title="Total users" value={this.state.users.total}/> : <Spin />}
+                        {this.state.users.total || this.state.users.total === 0 ? <Statistic title="Total users" value={this.state.users.total}/> : <Spin />}
                     </Col>
                     <Col span={6}>
-                        {this.state.tasks.total ? <Statistic title="Total tasks" value={this.state.tasks.total}/> : <Spin />}
+                        {this.state.tasks.total || this.state.tasks.total === 0 ? <Statistic title="Total tasks" value={this.state.tasks.total}/> : <Spin />}
                     </Col>
                     <Col span={6}>
                         {this.state.tasks.active || this.state.tasks.active === 0 ? <Statistic title="Active tasks" value={this.state.tasks.active}/> : <Spin />}
                     </Col>
                     <Col span={6}>
-                        {this.state.tasks.completed ? <Statistic title="Completed tasks" value={this.state.tasks.completed}/> : <Spin />}
+                        {this.state.tasks.completed || this.state.tasks.completedgit === 0 ? <Statistic title="Completed tasks" value={this.state.tasks.completed}/> : <Spin />}
                     </Col>
                 </Row>
                 <Row key="4" gutter={8} style={{marginTop: '1rem'}}>
