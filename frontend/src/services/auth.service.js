@@ -11,7 +11,7 @@ axios.interceptors.response.use(response => {
 
         // If response is not present
         if (!err.response) {
-            console.log("Response not present", err.config)
+            console.log("Response not available")
             return Promise.reject(err)
         }
 
