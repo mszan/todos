@@ -1,5 +1,5 @@
 import React from 'react';
-import {Col, Divider, Image, Row, Spin, Statistic, Typography} from "antd";
+import {Col, Divider, Image, Row, Skeleton, Spin, Statistic, Typography} from "antd";
 import axios from "axios";
 import todosLogo from "./todosLogo.png"
 import QueueAnim from "rc-queue-anim";
@@ -87,6 +87,8 @@ export class Home extends React.Component {
                 <Row key="3" gutter={8} justify="space-around">
                     <Col style={{marginTop: 30, marginBottom: 30}}>
                         <Image
+                            preview={false}
+                            placeholder={<Spin/>}
                             src={todosLogo}
                         />
                     </Col>
