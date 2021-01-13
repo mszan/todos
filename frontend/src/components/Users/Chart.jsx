@@ -30,6 +30,11 @@ export default class TasksSummaryChart extends React.Component {
                     time: {
                         unit: 'day'
                     }
+                }],
+                yAxes: [{
+                    ticks: {
+                        stepSize: 1
+                    }
                 }]
             },
             maintainAspectRatio: false // Keep chart responsive
