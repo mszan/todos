@@ -73,7 +73,7 @@ class LoginForm extends React.Component {
                     >
                         Login
                     </Button>
-                    <div style={{marginTop: '1rem'}}>Don't have an account? <Link to="#" onClick={this.props.handleLoginRegisterModalSwitch}>Register now!</Link></div>
+                    <div style={{marginTop: '1rem', textAlign: "center"}}>Don't have an account? <Link to="#" onClick={this.props.handleLoginRegisterModalSwitch}>Register now!</Link></div>
                 </Form.Item>
             </Form>
         );
