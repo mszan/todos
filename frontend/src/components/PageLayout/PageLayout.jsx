@@ -134,14 +134,19 @@ export class PageLayout extends React.Component {
                         style={{
                             margin: '24px 16px',
                             padding: 24,
-                            minWidth: window.innerWidth < 400 ? '100vw' : null,
+                            minWidth: window.innerWidth < 400 ? '90vw' : null,
                         }}
                     >
 
                         {this.props.children}
                     </Content>
                     <Animate transitionName="fade" transitionAppear>
-                        <Footer className="footer">
+                        <Footer
+                            className="footer"
+                            style={{
+                                minWidth: window.innerWidth < 400 ? '90vw' : null,
+                            }}
+                            >
                             Made with love by <a href="mailto:dmszanowski@icloud.com">mszan</a>.
                         </Footer>
                     </Animate>
