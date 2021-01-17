@@ -1,7 +1,18 @@
 # Todos
-Todos web app built with ReactJS and ExpressJS.
-![](https://i.imgur.com/Yizgeld.png)
+## Table of contents
+* [General info](#general-info)
+* [Live demo](#live-demo)
+* [Project structure](#project-structure)
+  * [Frontend](#frontend)
+  * [Backend](#backend)
+  
 
+## General info
+**Todos** is a web app built with ReactJS and ExpressJS that allows users to add, modify and delete tasks.
+![](https://i.imgur.com/Yizgeld.png)
+<details>
+  <summary>Desktop screenshots:</summary>
+  
 ![](https://i.imgur.com/43D3AeG.png)
 
 ![](https://i.imgur.com/ZKq8QY2.png)
@@ -9,14 +20,17 @@ Todos web app built with ReactJS and ExpressJS.
 ![](https://i.imgur.com/NzBw6xt.png)
 
 ![](https://i.imgur.com/8q8g40J.png)
+</details>
 
 ## Live demo
-**Available at** [todos.mszanowski.pl](https://todos.mszanowski.pl).
+Live demo is available at [todos.mszanowski.pl](https://todos.mszanowski.pl).
 
-It is hosted on VPS (nginx, gunicorn, pm2).
+Website is hosted on VPS (nginx, gunicorn, pm2).
 
-## Backend
-ExpressJS along with MySQL and JWT.
+## Project structure
+
+### Backend
+Backend uses ExpressJS along with MySQL and JWT.
 
 Routes:
 - **_api.js** - wrapper for every route,
@@ -25,8 +39,8 @@ Routes:
 - **tasks.js** - todo tasks,
 - **users.js** - users.
 
-## Frontend
-ReactJS along with Ant Design and Ant Motion.
+### Frontend
+Frontend uses ReactJS along with Ant Design and Ant Motion.
 
 Components:
 - **App** - root,
