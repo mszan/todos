@@ -25,7 +25,7 @@
 ## Live demo
 Live demo is available at [todos.mszanowski.pl](https://todos.mszanowski.pl).
 
-Website is hosted on VPS (nginx, gunicorn, pm2).
+Website is hosted on VPS (nginx, pm2).
 
 ## Project structure
 
