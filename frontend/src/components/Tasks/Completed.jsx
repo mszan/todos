@@ -78,7 +78,7 @@ export class Completed extends React.Component {
         let resultLast7Days = null
         let resultLast30Days = null
 
-        tasks.forEach((item, index) => {
+        tasks.forEach((item) => {
             for (const [key, val] of Object.entries(item)) {
                 // If
                 if (key === "completeDate") {
@@ -103,7 +103,7 @@ export class Completed extends React.Component {
     // Delete task from DB
     handleTaskDelete = task => {
         axios.delete(process.env.REACT_APP_API_URL + `tasks/${task.id}`, {headers: authHeader()})
-            .then(response => {
+            .then(() => {
                 notification.success({
                     message: 'Task deleted',
                     placement: 'bottomLeft'
@@ -131,7 +131,7 @@ export class Completed extends React.Component {
             active: "1",
             completeDate: null
         }, {headers: authHeader()})
-            .then(response => {
+            .then(() => {
                 notification.success({
                     message: 'Task marked active',
                     placement: 'bottomLeft'
@@ -160,14 +160,14 @@ export class Completed extends React.Component {
                 {this.state.tasksFetched && this.state.tasks.length > 0 ?
                     <QueueAnim component={Col} componentProps={{span: 24}} type={["scaleY", "scaleY"]} delay={[450, 0]}>
                         <Row key="statistics">
-                            <Col span={6} key={"total"}>
+                            <Col xs={12} lg={6} key={"total"}>
                                 <Statistic
                                     title="Total"
                                     value={String(this.state.tasks.length)}
                                     formatter={(val) => val}
                                 />
                             </Col>
-                            <Col span={6} key={"onTime"}>
+                            <Col xs={12} lg={6} key={"onTime"}>
                                 <Statistic
                                     title="On time"
                                     suffix="%"
@@ -175,14 +175,14 @@ export class Completed extends React.Component {
                                     formatter={(val) => val}
                                 />
                             </Col>
-                            <Col span={6} key={"last7Days"}>
+                            <Col xs={12} lg={6} key={"last7Days"}>
                                 <Statistic
                                     title="Last 7 days"
                                     value={String(this.state.tasksStats.completedLast7Days)}
                                     formatter={(val) => val}
                                 />
                             </Col>
-                            <Col span={6} key={"last30Days"}>
+                            <Col xs={12} lg={6} key={"last30Days"}>
                                 <Statistic
                                     title="Last 30 days"
                                     value={String(this.state.tasksStats.completedLast30Days)}
