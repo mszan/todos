@@ -74,37 +74,40 @@ export default function AddForm(props) {
                     <Form.Item
                         label="Title"
                         name="title"
-                        tooltip="DETAILS HERE"
                         rules={[{ required: true, message: 'Title is required.' }]}
                     >
-                        <Input placeholder="e.g. Take the trash out" />
+                        <Input placeholder="e.g. Buy milk" />
                     </Form.Item>
 
                     <Form.Item
                         label="Due date"
                         name="dueDate"
-                        tooltip="DETAILS HERE"
                     >
                         <DatePicker
                             showNow={false}
                             showTime={{format: "HH:mm"}}
                             format="YYYY-MM-DD HH:mm"
                             style={{width: "100%"}}
+                            placeholder="Expected completion time"
                         />
                     </Form.Item>
 
                     <Form.Item
                         label="Description"
                         name="description"
-                        tooltip="DETAILS HERE"
                     >
-                        <Input.TextArea rows={3} autoSize={{ minRows: 3 }} showCount maxLength={300} />
+                        <Input.TextArea
+                            rows={3}
+                            autoSize={{ minRows: 3 }}
+                            showCount
+                            maxLength={300}
+                            placeholder="e.g. Lactose free"
+                        />
                     </Form.Item>
 
                     <Form.Item
                         label="Priority"
                         name="priority"
-                        tooltip="DETAILS HERE"
                     >
                         <Radio.Group defaultValue="1" buttonStyle="solid" style={{width: "100%", textAlign: "center"}}>
                             <Radio.Button style={{width: "33.3%"}} value="2"><Badge color="red"/>High</Radio.Button>

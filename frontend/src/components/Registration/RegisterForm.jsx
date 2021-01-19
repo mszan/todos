@@ -73,7 +73,7 @@ class RegisterForm extends React.Component {
                         label="Username"
                         rules={[{ required: true, message: 'Please enter your username.' }]}
                     >
-                        <Input />
+                        <Input placeholder="e.g. johndoe35" />
                     </Form.Item>
                     <Form.Item
                         name="email"
@@ -89,7 +89,7 @@ class RegisterForm extends React.Component {
                             },
                         ]}
                     >
-                        <Input />
+                        <Input placeholder="e.g. johndoe@gmail.com"/>
                     </Form.Item>
                     <Form.Item
                         name="password"
@@ -133,14 +133,14 @@ class RegisterForm extends React.Component {
                         name="firstname"
                         label="Firstname"
                     >
-                        <Input />
+                        <Input placeholder="e.g. John"/>
                     </Form.Item>
 
                     <Form.Item
                         name="lastname"
                         label="Lastname"
                     >
-                        <Input />
+                        <Input placeholder="e.g. Doe"/>
                     </Form.Item>
 
                     <Divider />
@@ -149,7 +149,6 @@ class RegisterForm extends React.Component {
                         {...tailLayout}
                         style={{textAlign: "center"}}
                         name="agreeRules"
-                        label="agreeRules"
                         rules={[
                             {
                                 validator: (_, value) =>
