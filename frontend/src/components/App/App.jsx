@@ -13,29 +13,29 @@ function App() {
         <Router>
             <Switch>
                 <RouteWrapper
-                    navKey="4"
-                    path="/tasks/completed"
-                    component={Completed}
-                    title={"Completed tasks"}
-                    loginRequired
-                />
-                <RouteWrapper
                     navKey="3"
-                    path="/tasks"
+                    exact path="/tasks"
                     component={Active}
                     title={"Active tasks"}
                     loginRequired
                 />
                 <RouteWrapper
+                    navKey="4"
+                    exact path="/tasks/completed"
+                    component={Completed}
+                    title={"Completed tasks"}
+                    loginRequired
+                />
+                <RouteWrapper
                     navKey="2"
-                    path="/profile"
+                    exact path="/profile"
                     component={Profile}
                     title={"Profile"}
                     loginRequired
                 />
                 <RouteWrapper
                     navKey="1"
-                    path="" exact
+                    exact path=""
                     component={Home}
                     title={"Home"}
                 />
@@ -69,7 +69,7 @@ function RouteWrapper({component: Component, title: title, loginRequired: loginR
     }
 
     return (
-        <Route render={(props) =>
+        <Route render={() =>
             <PageLayout
                 title={username && accessToken ? title : null}
                 navKey={navKey ? navKey : null}
