@@ -8,7 +8,7 @@ import axios from "axios";
 import authHeader from "../../services/auth-header";
 import Paragraph from "antd/es/typography/Paragraph";
 import moment from "moment";
-import TasksSummaryChart from "./Chart";
+import TasksSummaryChart from "./TasksSummaryChart";
 
 // User profile page
 export class Profile extends React.Component {

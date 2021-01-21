@@ -1,6 +1,17 @@
 {
   "name": "frontend",
   "version": "1.0.0",
+  "babel": {
+    "presets": [
+      "@babel/react",
+      "@babel/env"
+    ],
+    "plugins": [
+      "@babel/plugin-syntax-jsx",
+      "@babel/syntax-class-properties",
+      "@babel/transform-class-properties"
+    ]
+  },
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^4.3.0",
@@ -30,7 +41,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "jest",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -50,5 +61,14 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.12.11",
+    "@babel/preset-react": "^7.12.10",
+    "babel-jest": "^26.6.3",
+    "babel-plugin-syntax-class-properties": "^6.13.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "jest": "^26.6.3",
+    "react-test-renderer": "^17.0.1"
   }
 }
