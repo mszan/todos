@@ -39,23 +39,29 @@ app.post("/register", async (req, res) => {
 // Authenticate API users, if success generate accessToken and refreshToken.
 app.post("/login", async (req, res) => {
     try {
+        // Get request parameters
+        let {username, password} = req.body;
+
+        // Check if request parameters are passed
+        if (!username || !password) return res.status(401).send({"msg": "Missing required parameters."});
+
         // Get user hashed password.
-        const hashedPassword = await pool.query("SELECT password FROM users WHERE username = ?", [req.body.username])
+        const hashedPassword = await pool.query("SELECT password FROM users WHERE username = ?", [username])
 
         // Check if query result is not empty.
         // If hashed password is not found (user does not exist), return message.
         if (hashedPassword[0].length < 1) return res.status(401).send({"msg": "User and / or password invalid / missing."})
 
         // Compare sent password and hashedPassword.
-        bcrypt.compare(req.body.password, hashedPassword[0][0]['password'], (err, result) => {
+        bcrypt.compare(password, hashedPassword[0][0]['password'], (err, result) => {
             // Check if password and hashedPassword match.
             if (result) {
                 // Generate new tokens.
-                const accessToken = authToken.generateAccessToken({'username': req.body.username})
-                const refreshToken = authToken.generateRefreshToken({'username': req.body.username})
+                const accessToken = authToken.generateAccessToken({'username': username})
+                const refreshToken = authToken.generateRefreshToken({'username': password})
 
                 // Get user's id from users table.
-                pool.query("SELECT id FROM users WHERE username = ?", [req.body.username])
+                pool.query("SELECT id FROM users WHERE username = ?", [username])
                     .then(userId => {
                         // Get user's refreshToken from usersRefreshTokens table.
                         pool.query("SELECT id FROM usersRefreshTokens WHERE users__id = ?", [userId[0][0]['id']])
@@ -88,7 +94,7 @@ app.post("/login", async (req, res) => {
 app.post("/token", async (req, res) => {
     try {
         const refreshToken = req.body.refreshToken
-        if (refreshToken == null) return res.json({"msg": "You need to pass refreshToken."})
+        if (refreshToken == null) return res.json({"msg": "You need to pass 'refreshToken' in body."})
 
         // Get refreshToken from usersRefreshTokens.
         await pool.query("SELECT usersRefreshTokens.refreshToken, usersRefreshTokens.lastUpdated, users.username FROM usersRefreshTokens JOIN users ON usersRefreshTokens.users__id = users.id WHERE usersRefreshTokens.refreshToken = ?",

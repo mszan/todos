@@ -63,7 +63,7 @@ app.get("/", (req, res) => {
         const { orderField } = req.query
         let { orderType } = req.query
 
-        // If orderField is set, check orderType value. If its not "ASC" or "DESC.
+        // If orderField is set, check orderType value. Must be "ASC" or "DESC".
         if (orderField) {
             if (!(orderType === "ASC" || orderType === "DESC")) {
                 return res.status(400).json({"msg": "Missing / wrong 'orderType' value. Use 'ASC' or 'DESC'."})
@@ -72,6 +72,13 @@ app.get("/", (req, res) => {
 
         // Get data from 'active' parameter.
         const { active } = req.query
+
+        // If active is set, check active value. Must be string 1 or string 0.
+        if (active) {
+            if (!(active === "0" || active === "1")) {
+                return res.status(400).json({"msg": "Wrong 'active' value. Use '1' or '0'."})
+            }
+        }
 
         // Base query string
         let query = `SELECT id, active, title, description, priority, addDate, dueDate, completeDate FROM tasks WHERE TRUE` // Base query.
@@ -155,8 +162,8 @@ app.put("/:id", async (req, res) => {
 
         // Queries for every field to be updated.
         for (const field in fields) {
-            await pool.query(`UPDATE tasks SET ${field} = ? WHERE id = ? AND users__id = ?`,
-                [fields[field], parseInt(req.params.id), res.locals.userId])
+            await pool.query("UPDATE tasks SET ? = ? WHERE id = ? AND users__id = ?",
+                [field, fields[field], parseInt(req.params.id), res.locals.userId])
                 .then(() => {
                     resMsg["updatedFields"][field] = fields[field]
                 })
@@ -175,14 +182,14 @@ app.delete("/:id", (req, res) => {
         }
 
         // Get task's owner id.
-        pool.query(`SELECT users__id FROM tasks WHERE id = ?`,
+        pool.query("SELECT users__id FROM tasks WHERE id = ?",
             [req.params.id])
             .then(queryRes => {
                 const ownerId = parseInt(queryRes[0][0]['users__id'])
                 // Check if user is owner of the task.
                 if (ownerId === res.locals.userId) {
                     // Delete task.
-                    pool.query(`DELETE FROM tasks WHERE id = ?`,
+                    pool.query("DELETE FROM tasks WHERE id = ?",
                         [req.params.id])
                         .then(() => {
                             res.json({"msg": `Task ${req.params.id} deleted.`})

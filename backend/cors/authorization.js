@@ -1,21 +1,23 @@
 const authorization = require("jsonwebtoken")
 const pool = require("../db");
+const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET
+const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET
 
 function generateAccessToken(payload) {
     // 5 minutes expiration.
-    return authorization.sign(payload, process.env.ACCESS_TOKEN_SECRET, {expiresIn: "15 min"})
+    return authorization.sign(payload, ACCESS_TOKEN_SECRET, {expiresIn: "15 min"})
 }
 
 function generateRefreshToken(payload) {
     // 5 days expiration.
-    return authorization.sign(payload, process.env.REFRESH_TOKEN_SECRET, {expiresIn: "5 days"})
+    return authorization.sign(payload, REFRESH_TOKEN_SECRET, {expiresIn: "5 days"})
 }
 
 async function authenticate(req, res, next) {
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(' ')[1]
     if (token == null) return res.sendStatus(401)
-    authorization.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, payload) => {
+    authorization.verify(token, ACCESS_TOKEN_SECRET, async (err, payload) => {
         if (err){
             console.log(err)
             return res.sendStatus(403)

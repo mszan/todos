@@ -39,12 +39,8 @@ app.get("/tasks", (req, res) => {
 
             // Query for data.
             pool.query(query)
-                .then(queryRes => {
-                    finalRes.push(queryRes[0][0])
-                })
-                .then(() => {
-                    res.json(finalRes)
-                })
+                .then(queryRes => finalRes.push(queryRes[0][0]))
+                .then(() => res.json(finalRes))
     }
     catch (err) {
         console.error(err.message)

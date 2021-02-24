@@ -7,4 +7,9 @@ const pool = mysql.createPool({
     database: 'todos'
 })
 
+// Check if DB connection is established.
+pool.query("SELECT 1")
+    .then(() => console.log('Database connection OK.'))
+    .catch(err => console.log('DB connection failure.', err))
+
 module.exports = pool
