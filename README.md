@@ -1,11 +1,4 @@
 # Todos
-## Table of contents
-* [General info](#general-info)
-* [Live demo](#live-demo)
-* [Project structure](#project-structure)
-  * [Frontend](#frontend)
-  * [Backend](#backend)
-  
 
 ## General info
 **Todos** is a web app built with ReactJS and ExpressJS that allows users to add, modify and delete tasks.
