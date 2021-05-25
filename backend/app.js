@@ -17,9 +17,8 @@ app.use('/api/users', authMiddleware.authenticate, apiRoutes.users)
 app.use('/api/tasks', authMiddleware.authenticate, middleware.tasks, apiRoutes.tasks)
 app.use('/api/public', apiRoutes.publicStats)
 
-const port = process.env.PORT || 5000
-app.listen(port, () => {
-    console.log(`Listening on port ${port}`)
+app.listen(5000, () => {
+    console.log(`Listening on port 5000`)
 })
 
 module.exports = app;

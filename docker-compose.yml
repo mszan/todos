@@ -1,0 +1,44 @@
+services:
+    mysql:
+      container_name: todos_mysql
+      restart: always
+      image: "mysql:5.6"
+      environment:
+        - MYSQL_ROOT_PASSWORD=${TODOS_MYSQL_ROOT_PASSWORD}
+      volumes:
+        - ./mysql:/var/lib/mysql
+        - ./todos.sql:/todos.sql
+      command: --default-authentication-plugin=mysql_native_password
+      healthcheck:
+        test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+        timeout: 5s
+        retries: 10
+  
+    backend:
+      container_name: todos_backend
+      restart: always
+      build:
+        context: ./backend
+      environment:
+        - ACCESS_TOKEN_SECRET=${TODOS_ACCESS_TOKEN_SECRET}
+        - REFRESH_TOKEN_SECRET=${TODOS_REFRESH_TOKEN_SECRET}
+        - MYSQL_ROOT_PASSWORD=${TODOS_MYSQL_ROOT_PASSWORD}
+      command: node app.js
+      ports:
+        - 4031:5000
+      depends_on:
+        mysql:
+          condition: service_healthy
+  
+    frontend:
+      container_name: todos_frontend
+      restart: always
+      build:
+        context: ./frontend
+        args:
+          - REACT_APP_API_URL=${TODOS_REACT_APP_API_URL}
+      command: serve -s build -l 3000
+      ports:
+        - 4030:3000
+      depends_on:
+        - backend

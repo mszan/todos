@@ -18,8 +18,6 @@
 ## Live demo
 Live demo is available at [todos.mszanowski.pl](https://todos.mszanowski.pl).
 
-Website is hosted on VPS (nginx, pm2).
-
 ## Project structure
 
 ### Backend
@@ -46,3 +44,10 @@ Components:
 Services:
 - **auth-header.js** - adds authentication header,
 - **auth.service.js** - authenticate users.
+
+## Environment variables
+
+- **TODOS_MYSQL_ROOT_PASSWORD**, e.g. *some_passwd*
+- **TODOS_ACCESS_TOKEN_SECRET**, e.g. *some_access_secret*
+- **TODOS_REFRESH_TOKEN_SECRET**, e.g. *some_refresh_secret*
+- **TODOS_REACT_APP_API_URL**, e.g. *http://localhost:7085/api/*

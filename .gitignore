@@ -1,5 +1,8 @@
 .DS_Store
-/.idea
+.idea
+mysql
+.history
+.vscode
 
 ##########BACKEND
 /backend/.idea
