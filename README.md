@@ -15,9 +15,6 @@
 ![](https://i.imgur.com/8q8g40J.png)
 </details>
 
-## Live demo
-Live demo is available at [todos.mszanowski.pl](https://todos.mszanowski.pl).
-
 ## Project structure
 
 ### Backend
